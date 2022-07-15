@@ -10,15 +10,14 @@ GameObject:
   m_Component:
   - component: {fileID: 5535598422235810604}
   - component: {fileID: 5535598422235810606}
-  - component: {fileID: 5535598422235810608}
   - component: {fileID: 5535598422235810607}
   - component: {fileID: 5535598422235810605}
   m_Layer: 2
-  m_Name: GAME MANAGER
+  m_Name: GameManager
   m_TagString: GameManager
   m_Icon: {fileID: 2800000, guid: b1b079d053c3d0c41952dadf32a89ffd, type: 3}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &5535598422235810604
 Transform:
@@ -47,22 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27717a4b41728774186c77fcb2074ead, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5535598422235810608
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5535598422235810603}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 646897a0057aa264ea599d6a02da736e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uIConfirm: {fileID: 5850541869724691707, guid: a74f9b08e4c7f5b4ca5081b4bca2ef10, type: 3}
-  uIInGameMenu: {fileID: 949701089740957054, guid: 68c6b8e65367af8418ea903ae465dcb5, type: 3}
-  uIInGameSettings: {fileID: 0}
-  uIInGameHUD: {fileID: 0}
+  menu:
+    m_Handle: 0
+  match:
+    m_Handle: 0
 --- !u!114 &5535598422235810607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,6 +62,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e78c114808666048ad1354c28e860f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sfxClips: []
+  musicClips: []
 --- !u!114 &5535598422235810605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,7 +98,7 @@ MonoBehaviour:
       m_SingletonActionBindings: []
       m_Flags: 0
     m_Reference: {fileID: 0}
-  m_PlayerPrefab: {fileID: 0}
+  m_PlayerPrefab: {fileID: 1045930665321588829, guid: c0fb115fb8b40934991792b825b61836, type: 3}
   m_SplitScreen: 0
   m_MaintainAspectRatioInSplitScreen: 0
   m_FixedNumberOfSplitScreens: -1

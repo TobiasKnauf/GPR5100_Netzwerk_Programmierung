@@ -39,4 +39,8 @@ public class AudioManager : MonoBehaviour
         }
     }
     #endregion
+
+    [SerializeField] List<AudioClip> sfxClips = new List<AudioClip> ();
+
+    [SerializeField] List<AudioClip> musicClips = new List<AudioClip> ();
 }
