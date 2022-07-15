@@ -27,36 +27,36 @@ public class RoomListEntry : MonoBehaviour
 
     private UIManager uiManager;
 
-    private void Start()
-    {
-        uiManager = GetComponent<UIManager>();
+    //private void Start()
+    //{
+    //    uiManager = GetComponent<UIManager>();
 
-        RoomInfo = new RoomInfo(Name, MaxPlayers, MapIndex);
+    //    RoomInfo = new RoomInfo(Name, MaxPlayers, MapIndex);
 
 
-        m_RoomName.text = Name;
-        m_RoomPlayers.text = $"{RoomInfo.CurrentPlayerCount}/{MaxPlayers}";
-    }
+    //    m_RoomName.text = Name;
+    //    m_RoomPlayers.text = $"{RoomInfo.CurrentPlayerCount}/{MaxPlayers}";
+    //}
 
-    public void Init(string _name, int _playercount, int _maxplayers)
-    {
-        Name = _name;
-        RoomInfo.CurrentPlayerCount = _playercount;
-        MaxPlayers = _maxplayers;
-    }
+    //public void Init(string _name, int _playercount, int _maxplayers)
+    //{
+    //    Name = _name;
+    //    RoomInfo.CurrentPlayerCount = _playercount;
+    //    MaxPlayers = _maxplayers;
+    //}
 
-    public void Update()
-    {
-        m_RoomPlayers.text = $"{RoomInfo.CurrentPlayerCount}/{MaxPlayers}";
-    }
-    public void JoinRoom()
-    {
-        if (RoomInfo.CurrentPlayerCount < MaxPlayers)
-        {
-            uiManager.UserRoom = Name;
-            RoomInfo.CurrentPlayerCount++;
-        }
-        else
-            Debug.LogWarning($"Can't join this room. Room {Name} is already full");
-    }
+    //public void Update()
+    //{
+    //    m_RoomPlayers.text = $"{RoomInfo.CurrentPlayerCount}/{MaxPlayers}";
+    //}
+    //public void JoinRoom()
+    //{
+    //    if (RoomInfo.CurrentPlayerCount < MaxPlayers)
+    //    {
+    //        uiManager.UserRoom = Name;
+    //        RoomInfo.CurrentPlayerCount++;
+    //    }
+    //    else
+    //        Debug.LogWarning($"Can't join this room. Room {Name} is already full");
+    //}
 }

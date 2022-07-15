@@ -59,7 +59,7 @@ public class UIManager : MonoBehaviour
     public void CreateRoom()
     {
         RoomListEntry roomPanel = Instantiate(m_RoomListEntryPrefab, m_NewRoomParent.transform);
-        roomPanel.Init(m_RoomNameInput.text, m_RoomPlayerCount.value + 2, m_RoomMapIndex.value);
+        //roomPanel.Init(m_RoomNameInput.text, m_RoomPlayerCount.value + 2, m_RoomMapIndex.value);
         Rooms.Add(roomPanel.RoomInfo);
     }
 }

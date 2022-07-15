@@ -282,7 +282,7 @@ GameObject:
   - component: {fileID: 260392788631110420}
   - component: {fileID: 2579328198868291121}
   - component: {fileID: 2982292073362338615}
-  - component: {fileID: 2829885467694082689}
+  - component: {fileID: -1252773099266487474}
   m_Layer: 5
   m_Name: Pnl_Room
   m_TagString: Untagged
@@ -394,7 +394,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2829885467694082689}
+      - m_Target: {fileID: -1252773099266487474}
         m_TargetAssemblyTypeName: 
         m_MethodName: 
         m_Mode: 1
@@ -406,7 +406,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &2829885467694082689
+--- !u!114 &-1252773099266487474
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -418,8 +418,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 885f605af826d34439af669db880f10e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
-  PlayerCount: 0
-  MaxPlayers: 0
-  m_RoomName: {fileID: 8016206979115670321}
-  m_RoomPlayers: {fileID: 2283906840384212029}
+  RoomInfo:
+    LobbyName: 
+    MaxPlayerCount: 0
+    CurrentPlayerCount: 0
+    MapIndex: 0
+  m_RoomName: {fileID: 0}
+  m_RoomPlayers: {fileID: 0}
