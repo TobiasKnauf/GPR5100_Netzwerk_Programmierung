@@ -1,23 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+using Photon.Pun;
+using Photon.Realtime;
+
+public class GameManager : MonoBehaviourPunCallbacks
 {
     #region Singleton
     private static GameManager instance;
     public static GameManager Instance { get { return instance; } }
-
-    private void Awake()
-    {
-        Initialize();
-    }
-
-    private void OnDestroy()
-    {
-        Terminate();
-    }
 
     private void Initialize()
     {
@@ -41,37 +35,123 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    #region Gamestates & Scenes
+    #region Fields
 
-    [SerializeField] private Scene menu;
-    [SerializeField] private Scene match;
+    #region Public Fields
 
-    public void StartMatch()
+    public GameObject playerPrefab;
+
+    #endregion
+
+    #region Private Fields
+
+
+
+    #endregion
+
+    #endregion
+
+    #region Methods
+
+    #region Callbacks
+
+    #region Unity Callbacks
+
+    private void Awake()
     {
-        SceneManager.LoadScene(match.name);
+        Initialize();
     }
 
-    public void EndMatch()
+    private void Start()
     {
-        SceneManager.LoadScene(menu.name);
+        InstantiateLocalPlayer();
     }
 
-    public void LeaveMatch()
+    private void OnDestroy()
     {
-        EndConnection();
-        SceneManager.LoadScene(menu.name);
-    }
-
-    public void QuitGame()
-    {
-        EndConnection();
-        Application.Quit();
+        Terminate();
     }
 
     #endregion
 
-    public void EndConnection()
+    #region Photon Callbacks
+
+    public override void OnLeftRoom()
     {
-        // TODO
+        SceneManager.LoadScene(0);
     }
+
+    public override void OnPlayerEnteredRoom(Player other)
+    {
+        Debug.LogFormat("OnPlayerEnteredRoom() {0}", other.NickName); // not seen if you're the player connecting
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
+
+            LoadGame();
+        }
+    }
+
+    public override void OnPlayerLeftRoom(Player other)
+    {
+        Debug.LogFormat("OnPlayerLeftRoom() {0}", other.NickName); // seen when other disconnects
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
+
+            LoadGame();
+        }
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Public Methods
+
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private void LoadGame()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
+        }
+        Debug.LogFormat("PhotonNetwork : Loading Match");
+        PhotonNetwork.LoadLevel("Game");
+    }
+
+    private void InstantiateLocalPlayer()
+    {
+        if (playerPrefab == null)
+        {
+            Debug.LogError("Missing playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
+        }
+        else
+        {
+            if (PlayerController.LocalPlayerInstance == null)
+            {
+                Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
+                // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+                PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+            }
+            else
+            {
+                Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
+            }
+        }
+    }
+
+    #endregion
+
+    #endregion
 }
