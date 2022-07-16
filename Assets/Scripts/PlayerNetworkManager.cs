@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-
 public class PlayerNetworkManager : MonoBehaviourPunCallbacks
 {
     private List<RoomInfo> roomList;
@@ -38,7 +37,18 @@ public class PlayerNetworkManager : MonoBehaviourPunCallbacks
         UIManager.OnJoined();
         UIManager.UpdatePlayerPanels();
 
+        if (PhotonNetwork.IsMasterClient)
+            UIManager.ShowHostStartButton();
+        else
+            UIManager.ShowHostStartButton(false);
+
         base.OnJoinedRoom();
+    }
+    public override void OnLeftRoom()
+    {
+        UIManager.ShowHostStartButton(false);
+        UIManager.OnLeft();
+        base.OnLeftRoom();
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
@@ -49,6 +59,11 @@ public class PlayerNetworkManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         UIManager.UpdatePlayerPanels();
+
+        if (PhotonNetwork.IsMasterClient)
+            UIManager.ShowHostStartButton();
+        else
+            UIManager.ShowHostStartButton(false);
 
         base.OnPlayerLeftRoom(otherPlayer);
     }

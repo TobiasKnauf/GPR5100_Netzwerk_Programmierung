@@ -35,7 +35,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text m_RoomTitleText;
     [SerializeField] private Transform m_ConnectedPlayersContent;
     [SerializeField] private GameObject m_ListedPlayerPrefab;
+    [SerializeField] private GameObject m_HostStartButton;
 
+    #region UI Updates
     private void CloseAllPanels()
     {
         m_StartPanel.enabled = false;
@@ -43,11 +45,19 @@ public class UIManager : MonoBehaviour
         m_RoomPanel.enabled = false;
         m_OptionsPanel.enabled = false;
     }
+    /// <summary>
+    /// Disables all panels and shows the give one
+    /// </summary>
+    /// <param name="_panel">Panel to show</param>
     public void ShowPanel(Canvas _panel)
     {
         CloseAllPanels();
         _panel.enabled = true;
     }
+    /// <summary>
+    /// Creates a new List of Room Buttons
+    /// </summary>
+    /// <param name="_roomList">All rooms in the default Lobby</param>
     public void CreateNewRoomButtons(List<RoomInfo> _roomList)
     {
         //Clear Room list
@@ -56,12 +66,17 @@ public class UIManager : MonoBehaviour
 
         for (int i = 0; i < _roomList.Count; i++)
         {
+            if (_roomList[i].RemovedFromList) continue;
+
             GameObject newRoomListEntry = Instantiate(m_RoomListEntryPrefab, m_RoomListContent);
             newRoomListEntry.transform.Find("Txt_RoomName").GetComponent<TMP_Text>().text = _roomList[i].Name; //Set server name to button
             newRoomListEntry.transform.Find("Txt_Players").GetComponent<TMP_Text>().text = $"{_roomList[i].PlayerCount}/{_roomList[i].MaxPlayers}"; //Set current player and max players to button
             newRoomListEntry.GetComponent<Button>().onClick.AddListener(delegate { OnClick_JoinRoom(newRoomListEntry); }); //Assigns new Function to this button
         }
     }
+    /// <summary>
+    /// Creates a new List of Player in the current Room
+    /// </summary>
     public void UpdatePlayerPanels()
     {
         //Clear Player Panels
@@ -79,30 +94,44 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
             GameObject newPlayer = Instantiate(m_ListedPlayerPrefab, m_ConnectedPlayersContent);
-            newPlayer.GetComponentInChildren<TMP_Text>().text = PhotonNetwork.PlayerList[i].NickName;
-            newPlayer.GetComponent<Image>().color = colors[i];
-
-            if (PhotonNetwork.PlayerList[i].IsMasterClient)
-                AddHostStartButton(newPlayer);
+            newPlayer.GetComponentInChildren<TMP_Text>().text = PhotonNetwork.PlayerList[i].NickName; //Show player name
+            newPlayer.GetComponent<Image>().color = colors[i]; //Set player color
         }
     }
-    private void AddHostStartButton(GameObject _player)
+    public void ShowHostStartButton(bool _visibility = true)
     {
-        Button hostStart = _player.transform.Find("Btn_HostStart").GetComponent<Button>();
-        hostStart.gameObject.SetActive(true);
-        hostStart.onClick.AddListener(delegate { StartRound(); });
+        m_HostStartButton.SetActive(_visibility);
     }
+    #endregion
 
-    private void StartRound()
-    {
-        //PhotonNetwork.LoadLevel(#GAMESCENE);
-    }
-
+    #region Callback Methods
+    /// <summary>
+    /// Called when the user joins a room
+    /// </summary>
     public void OnJoined()
     {
         ShowPanel(m_RoomPanel);
         m_RoomTitleText.text = PhotonNetwork.CurrentRoom.Name;
     }
+    /// <summary>
+    /// Called when the user leaves a room
+    /// </summary>
+    public void OnLeft()
+    {
+        ShowPanel(m_RoomListPanel);
+    }
+    /// <summary>
+    /// Called when the MasterClient starts the match
+    /// </summary>
+    private void OnStart()
+    {
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+
+        //PhotonNetwork.LoadLevel(#GAMESCENE);
+    }
+    #endregion
+
+    #region Button Click Events
     public void OnClick_CreateRoom()
     {
         if (!string.IsNullOrEmpty(m_UserNameInput.text))
@@ -128,4 +157,17 @@ public class UIManager : MonoBehaviour
         string roomName = _button.transform.Find("Txt_RoomName").GetComponent<TMP_Text>().text;
         PhotonNetwork.JoinRoom(roomName);
     }
+    public void OnClick_LeaveRoom()
+    {
+        if (PhotonNetwork.InRoom == false) return;
+
+        PhotonNetwork.LeaveRoom(false);
+    }
+    public void OnClick_StartRound()
+    {
+        if (PhotonNetwork.CurrentRoom.PlayerCount < 2) return;
+
+        OnStart();
+    }
+    #endregion
 }
