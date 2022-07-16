@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class UIManager : MonoBehaviour
+public class UIManager : MonoBehaviourPunCallbacks
 {
-    public List<RoomInfo> Rooms = new List<RoomInfo>();
-
     [Header("Panel/Screens")]
     [SerializeField] private GameObject m_StartPanel;
     [SerializeField] private GameObject m_RoomListPanel;
@@ -27,24 +27,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject m_NewRoomParent;
     [SerializeField] private RoomListEntry m_RoomListEntryPrefab;
 
-    [Header("User Information")]
-    public string UserRoom;
-
-    private void Update()
+    public override void OnRoomListUpdate(List<Photon.Realtime.RoomInfo> roomList)
     {
-        /*
-            update room list
-            update room list in ui
-        */
-        for (int i = 0; i < Rooms.Count; i++)
-        {
-            //Rooms[i].
-        }
-
-
-        Debug.Log($"Amount of rooms: {Rooms.Count}");
-        if (Rooms.Count>0)
-            Debug.Log($"Room 1 Info Name: {Rooms[0].LobbyName}, Players: {Rooms[0].CurrentPlayerCount}/{Rooms[0].MaxPlayerCount}, Map: {Rooms[0].MapIndex}");
+        Debug.Log("new room added to the list");
     }
 
     public void ShowPanel(GameObject _panel)
@@ -59,7 +44,15 @@ public class UIManager : MonoBehaviour
     public void CreateRoom()
     {
         RoomListEntry roomPanel = Instantiate(m_RoomListEntryPrefab, m_NewRoomParent.transform);
-        //roomPanel.Init(m_RoomNameInput.text, m_RoomPlayerCount.value + 2, m_RoomMapIndex.value);
-        Rooms.Add(roomPanel.RoomInfo);
+        roomPanel.Init(m_RoomNameInput.text, (byte)m_RoomMapIndex.value, (byte)(m_RoomPlayerCount.value + 2), this);
+
+        string name = roomPanel.RoomInfo.LobbyName;
+        byte maxPlayers = roomPanel.RoomInfo.MaxPlayerCount;
+
+        PhotonNetwork.CreateRoom(name, new RoomOptions { MaxPlayers = maxPlayers },TypedLobby.Default);
+    }
+    public override void OnCreatedRoom()
+    {
+        Debug.Log("Created Room: " + m_RoomNameInput.text);
     }
 }

@@ -2220,6 +2220,7 @@ GameObject:
   m_Component:
   - component: {fileID: 660093271}
   - component: {fileID: 660093272}
+  - component: {fileID: 660093273}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -2255,6 +2256,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Rooms: []
+  RoomEntryList: []
   m_StartPanel: {fileID: 2050498837}
   m_RoomListPanel: {fileID: 1022415664}
   m_RoomPanel: {fileID: 1271613213}
@@ -2265,8 +2267,20 @@ MonoBehaviour:
   m_RoomPlayerCount: {fileID: 352440424}
   m_RoomMapIndex: {fileID: 2065860566}
   m_NewRoomParent: {fileID: 278568951}
-  m_RoomListEntryPrefab: {fileID: 2829885467694082689, guid: 6065d85789bfb2a40958436ac0dd9871, type: 3}
+  m_RoomListEntryPrefab: {fileID: -1252773099266487474, guid: 6065d85789bfb2a40958436ac0dd9871, type: 3}
   UserRoom: 
+--- !u!114 &660093273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 660093270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac26b4ad81332d1489be6bc7775f8f5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &692919364
 GameObject:
   m_ObjectHideFlags: 0

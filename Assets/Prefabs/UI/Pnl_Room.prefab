@@ -395,12 +395,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: -1252773099266487474}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+        m_TargetAssemblyTypeName: RoomListEntry, Assembly-CSharp
+        m_MethodName: JoinRoom
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -423,5 +423,5 @@ MonoBehaviour:
     MaxPlayerCount: 0
     CurrentPlayerCount: 0
     MapIndex: 0
-  m_RoomName: {fileID: 0}
-  m_RoomPlayers: {fileID: 0}
+  m_RoomName: {fileID: 8016206979115670321}
+  m_RoomPlayers: {fileID: 2283906840384212029}
