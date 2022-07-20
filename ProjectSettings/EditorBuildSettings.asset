@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Tobias/Test_Menu.unity
     guid: bd69682fba1c12f4dbd6f0fd29269b50
   - enabled: 1
+    path: Assets/Scenes/Tobias/Test_InGame.unity
+    guid: d5039ffd5802f114aa6be9a2e3ef6b26
+  - enabled: 1
     path: Assets/Scenes/Lars/Game.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   m_configObjects: {}
