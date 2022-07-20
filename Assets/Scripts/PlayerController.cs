@@ -9,31 +9,13 @@ using Photon.Realtime;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 {
-    #region Fields
-
-    #region Public Fields
-
     public static GameObject LocalPlayerInstance;
-
-    #endregion
-
-    #region Private Fields
 
     [SerializeField] private float moveSpeed;
 
     [SerializeField] private Rigidbody2D rb;
 
     private Vector2 moveVal;
-
-    #endregion
-
-    #endregion
-
-    #region Methods
-
-    #region Callbacks
-
-    #region Unity Callbacks
 
     private void Awake()
     {
@@ -47,7 +29,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
+        if (!photonView.IsMine && PhotonNetwork.IsConnected)
         {
             return;
         }
@@ -55,18 +37,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void FixedUpdate()
     {
-        if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
+        if (!photonView.IsMine && PhotonNetwork.IsConnected)
         {
             return;
         }
 
         Move();
     }
-
-
-    #endregion
-
-    #region Input System Callbacks
 
     private void OnMove(InputValue inputValue)
     {
@@ -92,18 +69,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (!photonView.IsMine)
             return;
     }
-
-    #endregion
-
-    #endregion
-
-    #region Public Methods
-
-
-
-    #endregion
-
-    #region Private Methods
 
     private void Move()
     {
@@ -140,10 +105,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    #endregion
-
-    #region IPunObservable implementation
-
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
@@ -159,8 +120,4 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             //this.Health = (float)stream.ReceiveNext();
         }
     }
-
-    #endregion
-
-    #endregion
 }
