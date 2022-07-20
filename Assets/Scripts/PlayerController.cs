@@ -2,8 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Photon;
+using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IOnEventCallback
 {
     #region Components
     private Rigidbody2D rb;
@@ -15,23 +19,33 @@ public class PlayerController : MonoBehaviour
     private float moveSpeed;
     #endregion
 
+    [SerializeField]
+    private PhotonView view;
+
     private void Awake()
     {
-
+        view = GetComponent<PhotonView>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        if (!view.IsMine) return;
+
+        view.Owner.NickName = PhotonNetwork.NickName;
+
+        PhotonNetwork.AddCallbackTarget(this);
     }
 
     private void Update()
     {
-
+        if (!view.IsMine) return;
     }
 
     private void FixedUpdate()
     {
+        if (!view.IsMine) return;
+
         rb.AddForce(moveVal * moveSpeed * Time.fixedDeltaTime);
     }
 
@@ -54,6 +68,11 @@ public class PlayerController : MonoBehaviour
     private void OnMenu(InputValue inputValue)
     {
 
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        throw new System.NotImplementedException();
     }
     #endregion
 }
