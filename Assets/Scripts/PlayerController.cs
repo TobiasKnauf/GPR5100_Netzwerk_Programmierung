@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Start()
     {
-        SetCamera();
+        //SetCamera();
     }
 
     private void Update()

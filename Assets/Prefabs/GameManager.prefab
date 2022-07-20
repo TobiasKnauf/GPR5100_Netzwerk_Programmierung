@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5535598422235810606}
   - component: {fileID: 5535598422235810607}
   - component: {fileID: 5535598422235810605}
+  - component: {fileID: 85571387}
   m_Layer: 2
   m_Name: GameManager
   m_TagString: GameManager
@@ -46,10 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27717a4b41728774186c77fcb2074ead, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menu:
-    m_Handle: 0
-  match:
-    m_Handle: 0
+  playerPrefab: {fileID: 1045930665321588829, guid: c0fb115fb8b40934991792b825b61836, type: 3}
+  UIManager: {fileID: 85571387}
 --- !u!114 &5535598422235810607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,7 +78,7 @@ MonoBehaviour:
   m_NotificationBehavior: 0
   m_MaxPlayerCount: -1
   m_AllowJoining: 1
-  m_JoinBehavior: 0
+  m_JoinBehavior: 2
   m_PlayerJoinedEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -108,3 +107,31 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &85571387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5535598422235810603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4eb6e1d403016841a44e4d2f13d75c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StartPanel: {fileID: 0}
+  m_RoomListPanel: {fileID: 0}
+  m_RoomPanel: {fileID: 0}
+  m_OptionsPanel: {fileID: 0}
+  m_ControlsImage: {fileID: 0}
+  m_GameplayImage: {fileID: 0}
+  m_UserNameInput: {fileID: 0}
+  m_RoomNameInput: {fileID: 0}
+  m_RoomPlayerCount: {fileID: 0}
+  m_RoomMapIndex: {fileID: 0}
+  m_RoomListEntryPrefab: {fileID: 8307368658025580053, guid: 6065d85789bfb2a40958436ac0dd9871, type: 3}
+  m_RoomListContent: {fileID: 0}
+  m_RoomTitleText: {fileID: 0}
+  m_ConnectedPlayersContent: {fileID: 0}
+  m_ListedPlayerPrefab: {fileID: 8695094484876778737, guid: 7e177a4396ab8ff48bbe288b231dd813, type: 3}
+  m_HostStartButton: {fileID: 0}

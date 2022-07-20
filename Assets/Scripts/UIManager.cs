@@ -10,8 +10,6 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private PlayerNetworkManager player;
-
     [Header("Panel/Screens")]
     [SerializeField] private Canvas m_StartPanel;
     [SerializeField] private Canvas m_RoomListPanel;
