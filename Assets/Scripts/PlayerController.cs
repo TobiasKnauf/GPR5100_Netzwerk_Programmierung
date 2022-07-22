@@ -12,10 +12,25 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     public static GameObject LocalPlayerInstance;
 
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float dashSpeed;
 
-    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Rigidbody2D rbPlayer;
+
+    [SerializeField] private Rigidbody2D rbProjectile;
+
+    public bool hasProjectile;
 
     private Vector2 moveVal;
+
+    [SerializeField] private float force;
+
+    private bool isDashing;
+
+    private bool isDead;
+
+    [SerializeField] private Transform projectilePos;
+
+    PlayerInput playerInput;
 
     private void Awake()
     {
@@ -25,6 +40,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private void Start()
     {
         //SetCamera();
+        GetProjectile();
     }
 
     private void Update()
@@ -45,6 +61,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         Move();
     }
 
+    #region Input
+
     private void OnMove(InputValue inputValue)
     {
         if (!photonView.IsMine)
@@ -56,12 +74,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!photonView.IsMine)
             return;
+
+        StartCoroutine(Dash());
     }
 
     private void OnShoot(InputValue inputValue)
     {
         if (!photonView.IsMine)
             return;
+
+        Shoot();
     }
 
     private void OnMenu(InputValue inputValue)
@@ -70,9 +92,60 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             return;
     }
 
+    #endregion
+
     private void Move()
     {
-        rb.AddForce(moveVal * moveSpeed * Time.fixedDeltaTime);
+        rbPlayer.AddForce(moveVal * moveSpeed * Time.fixedDeltaTime);
+        Vector3 diff = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - transform.position;
+        diff.Normalize();
+        float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+    }
+
+
+    IEnumerator Dash()
+    {
+        isDashing = true;
+        rbPlayer.AddForce(transform.up * dashSpeed, ForceMode2D.Impulse);
+        yield return new WaitForSeconds(.3f);
+        isDashing = false;
+    }
+
+
+    private void Shoot()
+    {
+        playerInput.SwitchCurrentActionMap("Gameplay no Weapon");
+        rbProjectile.transform.SetParent(null);
+        rbProjectile.simulated = true;
+        Vector2 vec = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - transform.position;
+        rbProjectile.AddForce(vec.normalized * force, ForceMode2D.Impulse);
+
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == 10)
+        {
+            if (isDashing)
+            {
+                playerInput.SwitchCurrentActionMap("Gameplay Weapon");
+                hasProjectile = true;
+                rbProjectile.transform.SetParent(projectilePos, false);
+                rbProjectile.transform.position = projectilePos.position;
+                rbProjectile.simulated = false;
+                
+            }
+            else
+            {
+                isDead = true;
+            }
+        }
+    }
+
+    private void GetProjectile()
+    {
+        rbProjectile = GameObject.Find("Projectile").GetComponent<Rigidbody2D>();
     }
 
     private void Initialize()
@@ -82,6 +155,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine)
         {
             PlayerController.LocalPlayerInstance = this.gameObject;
+            playerInput = GetComponent<PlayerInput>();
         }
         // #Critical
         // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
