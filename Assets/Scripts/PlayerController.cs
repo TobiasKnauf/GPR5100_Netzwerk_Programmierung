@@ -16,19 +16,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     [SerializeField] private Rigidbody2D rbPlayer;
 
-    [SerializeField] private Rigidbody2D rbProjectile;
-
-    public bool hasProjectile;
-
     private Vector2 moveVal;
 
     [SerializeField] private float force;
 
     private bool isDashing;
 
-    private bool isDead;
+    public bool isDead;
 
-    [SerializeField] private Transform projectilePos;
+    [SerializeField] private ProjectileController projectile;
 
     PlayerInput playerInput;
 
@@ -40,7 +36,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private void Start()
     {
         //SetCamera();
-        GetProjectile();
+        projectile = GameObject.Find("Projectile").GetComponent<ProjectileController>();
     }
 
     private void Update()
@@ -57,8 +53,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             return;
         }
-
-        Move();
+        //if (!isDead)
+            Move();
     }
 
     #region Input
@@ -67,6 +63,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!photonView.IsMine)
             return;
+
         moveVal = inputValue.Get<Vector2>();
     }
 
@@ -116,11 +113,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private void Shoot()
     {
         playerInput.SwitchCurrentActionMap("Gameplay no Weapon");
-        rbProjectile.transform.SetParent(null);
-        rbProjectile.simulated = true;
         Vector2 vec = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - transform.position;
-        rbProjectile.AddForce(vec.normalized * force, ForceMode2D.Impulse);
-
+        projectile.Shoot(this, vec, force);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -128,24 +122,33 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (collision.gameObject.layer == 10)
         {
             if (isDashing)
-            {
+            { 
+                projectile.PickUp(this);
                 playerInput.SwitchCurrentActionMap("Gameplay Weapon");
-                hasProjectile = true;
-                rbProjectile.transform.SetParent(projectilePos, false);
-                rbProjectile.transform.position = projectilePos.position;
-                rbProjectile.simulated = false;
-                
+
             }
-            else
+            else if (collision.gameObject.GetComponent<ProjectileController>().isFlying)
             {
                 isDead = true;
             }
         }
     }
 
-    private void GetProjectile()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        rbProjectile = GameObject.Find("Projectile").GetComponent<Rigidbody2D>();
+        if (collision.gameObject.layer == 10)
+        {
+            if (isDashing)
+            {
+                projectile.PickUp(this);
+                playerInput.SwitchCurrentActionMap("Gameplay Weapon");
+
+            }
+            else if (collision.gameObject.GetComponent<ProjectileController>().isFlying)
+            {
+                isDead = true;
+            }
+        }
     }
 
     private void Initialize()
