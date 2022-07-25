@@ -1,24 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class ProjectileController : MonoBehaviour
 {
     public PlayerController Owner;
+    public bool IsFlying;
 
     [SerializeField] private Vector3 poolingPosition;
-
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private CircleCollider2D circleCollider;
     [SerializeField] private CircleCollider2D circleTrigger;
-    [SerializeField] float flyingThreshold = 10;
+    [SerializeField] private float flyingThreshold = 10;
+    [SerializeField] private TrailRenderer trailRenderer;
+    [SerializeField] private VisualEffect collisionVisualEffect;
 
-    public bool IsFlying;
+    private Vector3 preCollisionVelocity;
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if (Owner == null && IsFlying)
-            Fly();
+        if (IsFlying)
+        {
+            preCollisionVelocity = rb.velocity;
+            if (Owner == null)
+                Fly();
+        }
+
     }
 
     private void Fly()
@@ -33,12 +41,16 @@ public class ProjectileController : MonoBehaviour
     {
         IsFlying = true;
         transform.position = Owner.transform.position;
+        trailRenderer.Clear();
+        trailRenderer.emitting = true;
         rb.bodyType = RigidbodyType2D.Dynamic;
     }
 
-    private void StopFlying()
+    public void StopFlying()
     {
         IsFlying = false;
+        trailRenderer.emitting = false;
+        trailRenderer.Clear();
         rb.bodyType = RigidbodyType2D.Static;
     }
 
@@ -57,6 +69,8 @@ public class ProjectileController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        collisionVisualEffect.SetVector3("Velocity", preCollisionVelocity);
+        collisionVisualEffect.Play();
         Owner = null;
     }
 }

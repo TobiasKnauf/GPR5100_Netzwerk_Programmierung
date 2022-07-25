@@ -14,6 +14,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private float moveSpeed;
     [SerializeField] private float dashSpeed;
 
+    [SerializeField] private SpriteRenderer projectileIndicator;
+    [SerializeField] private Color hasProjectileColor;
+    [SerializeField] private Color hasNoProjectileColor;
+
     [SerializeField] private Rigidbody2D rbPlayer;
 
     private Vector2 moveVal;
@@ -53,8 +57,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             return;
         }
-        //if (!isDead)
-        Move();
+        if (!IsDead)
+            Move();
     }
 
     #region Input
@@ -93,7 +97,17 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Move()
     {
-        rbPlayer.AddForce(moveVal * moveSpeed * Time.fixedDeltaTime);
+        if (moveVal.magnitude > 0.5f)
+        {
+            rbPlayer.drag = 1f;
+            rbPlayer.AddForce(moveVal * moveSpeed * Time.fixedDeltaTime);
+        }
+        else
+        {
+            rbPlayer.drag = 5f;
+        }
+
+
         Vector3 diff = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - transform.position;
         diff.Normalize();
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
@@ -111,6 +125,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Shoot()
     {
+        projectileIndicator.color = hasNoProjectileColor;
         playerInput.SwitchCurrentActionMap("Gameplay no Weapon");
         Vector2 vec = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - transform.position;
         projectile.Shoot(this, vec, force);
@@ -125,16 +140,21 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 if (isDashing)
                 {
                     projectile.PickUp(this);
+                    projectileIndicator.color = hasProjectileColor;
                     playerInput.SwitchCurrentActionMap("Gameplay Weapon");
 
                 }
                 else if (projectile.IsFlying)
                 {
+                    rbPlayer.AddForce(collision.attachedRigidbody.velocity, ForceMode2D.Impulse);
+                    projectile.Owner = null;
+                    projectile.StopFlying();
                     IsDead = true;
                 }
                 else
                 {
                     projectile.PickUp(this);
+                    projectileIndicator.color = hasProjectileColor;
                     playerInput.SwitchCurrentActionMap("Gameplay Weapon");
                 }
             }
