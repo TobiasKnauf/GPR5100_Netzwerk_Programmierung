@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
-    public PlayerController owner;
+    public PlayerController Owner;
+
+    [SerializeField] private Vector3 poolingPosition;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private CircleCollider2D circleCollider;
     [SerializeField] private CircleCollider2D circleTrigger;
     [SerializeField] float flyingThreshold = 10;
 
-    public bool isFlying;
+    public bool IsFlying;
 
     private void Update()
     {
-        if (owner == null && isFlying)
+        if (Owner == null && IsFlying)
             Fly();
     }
 
@@ -29,39 +31,32 @@ public class ProjectileController : MonoBehaviour
 
     private void StartFlying()
     {
-        isFlying = true;
-        circleCollider.enabled = true;
-        rb.isKinematic = false;
+        IsFlying = true;
+        transform.position = Owner.transform.position;
+        rb.bodyType = RigidbodyType2D.Dynamic;
     }
 
     private void StopFlying()
     {
-        isFlying = false;
-        circleCollider.enabled = false;
-        rb.isKinematic = true;
+        IsFlying = false;
+        rb.bodyType = RigidbodyType2D.Static;
     }
 
     public void PickUp(PlayerController _player)
     {
-        owner = _player;
-        rb.transform.SetParent(_player.transform, false);
-        rb.transform.position = _player.transform.position;
-    }
-
-    public void Drop()
-    {
-        rb.transform.SetParent(null);
+        Owner = _player;
+        StopFlying();
+        transform.position = poolingPosition;
     }
 
     public void Shoot(PlayerController _player, Vector2 _direction, float _force)
     {
         StartFlying();
-        rb.transform.SetParent(null);
         rb.AddForce(_direction.normalized * _force, ForceMode2D.Impulse);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        owner = null;
+        Owner = null;
     }
 }

@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private bool isDashing;
 
-    public bool isDead;
+    public bool IsDead;
 
     [SerializeField] private ProjectileController projectile;
 
@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             return;
         }
         //if (!isDead)
-            Move();
+        Move();
     }
 
     #region Input
@@ -109,7 +109,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         isDashing = false;
     }
 
-
     private void Shoot()
     {
         playerInput.SwitchCurrentActionMap("Gameplay no Weapon");
@@ -117,36 +116,27 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         projectile.Shoot(this, vec, force);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.layer == 10)
-        {
-            if (isDashing)
-            { 
-                projectile.PickUp(this);
-                playerInput.SwitchCurrentActionMap("Gameplay Weapon");
-
-            }
-            else if (collision.gameObject.GetComponent<ProjectileController>().isFlying)
-            {
-                isDead = true;
-            }
-        }
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer == 10)
         {
-            if (isDashing)
+            if (projectile.Owner != this)
             {
-                projectile.PickUp(this);
-                playerInput.SwitchCurrentActionMap("Gameplay Weapon");
+                if (isDashing)
+                {
+                    projectile.PickUp(this);
+                    playerInput.SwitchCurrentActionMap("Gameplay Weapon");
 
-            }
-            else if (collision.gameObject.GetComponent<ProjectileController>().isFlying)
-            {
-                isDead = true;
+                }
+                else if (projectile.IsFlying)
+                {
+                    IsDead = true;
+                }
+                else
+                {
+                    projectile.PickUp(this);
+                    playerInput.SwitchCurrentActionMap("Gameplay Weapon");
+                }
             }
         }
     }
