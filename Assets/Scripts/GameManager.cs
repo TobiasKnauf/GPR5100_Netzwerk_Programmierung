@@ -35,7 +35,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     #endregion
 
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private UIManager UIManager;
 
     private List<RoomInfo> roomList;
 
@@ -60,7 +59,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (_scene == SceneManager.GetSceneByBuildIndex(1))
         {
-            StartCoroutine(StartGame(3f));
+            InstantiateLocalPlayer();
         }
     }
 
@@ -82,7 +81,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public override void OnRoomListUpdate(List<RoomInfo> _list)
     {
         roomList = _list;
-        UIManager.CreateNewRoomButtons(roomList);
+        UIManager.Instance.CreateNewRoomButtons(roomList);
 
         base.OnRoomListUpdate(roomList);
     }
@@ -93,42 +92,43 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        UIManager.OnJoined();
-        UIManager.UpdatePlayerPanels();
+        UIManager.Instance.OnJoined();
+        UIManager.Instance.UpdatePlayerPanels();
 
         if (PhotonNetwork.IsMasterClient)
-            UIManager.ShowHostStartButton();
+            UIManager.Instance.ShowHostStartButton();
         else
-            UIManager.ShowHostStartButton(false);
+            UIManager.Instance.ShowHostStartButton(false);
 
         base.OnJoinedRoom();
     }
     public override void OnLeftRoom()
     {
-        UIManager.ShowHostStartButton(false);
-        UIManager.OnLeft();
+        UIManager.Instance.ShowHostStartButton(false);
+        UIManager.Instance.OnLeft();
         base.OnLeftRoom();
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        UIManager.UpdatePlayerPanels();
+        UIManager.Instance.UpdatePlayerPanels();
 
         base.OnPlayerEnteredRoom(newPlayer);
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        UIManager.UpdatePlayerPanels();
+        UIManager.Instance.UpdatePlayerPanels();
 
         if (PhotonNetwork.IsMasterClient)
-            UIManager.ShowHostStartButton();
+            UIManager.Instance.ShowHostStartButton();
         else
-            UIManager.ShowHostStartButton(false);
+            UIManager.Instance.ShowHostStartButton(false);
 
         base.OnPlayerLeftRoom(otherPlayer);
     }
 
     #endregion
 
+    #region InGame Functions
     private void InstantiateLocalPlayer()
     {
         if (playerPrefab == null)
@@ -149,11 +149,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
     }
-    private IEnumerator StartGame(float _startTimer)
-    {
-        InstantiateLocalPlayer();
-        yield return new WaitForSeconds(_startTimer);
-    }
 
     public void RegisterPlayer(int _viewID)
     {
@@ -171,7 +166,6 @@ public class GameManager : MonoBehaviourPunCallbacks
                 PlayerController.LocalPlayerInstance.Died();
             }
             Players.Remove(PhotonNetwork.GetPhotonView(_viewID));
-
         }
 
         CalculateWin();
@@ -188,4 +182,5 @@ public class GameManager : MonoBehaviourPunCallbacks
              */
         }
     }
+    #endregion
 }

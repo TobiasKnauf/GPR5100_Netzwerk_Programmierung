@@ -10,6 +10,32 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
+    #region Singleton
+    private static UIManager instance;
+    public static UIManager Instance { get { return instance; } }
+
+    private void Initialize()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+    }
+
+    private void Terminate()
+    {
+        if (this == Instance)
+        {
+            instance = null;
+        }
+    }
+    #endregion
+
     [Header("Panel/Screens")]
     [SerializeField] private Canvas m_StartPanel;
     [SerializeField] private Canvas m_RoomListPanel;
@@ -35,6 +61,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Transform m_ConnectedPlayersContent;
     [SerializeField] private GameObject m_ListedPlayerPrefab;
     [SerializeField] private GameObject m_HostStartButton;
+
+    private void Awake()
+    {
+        Initialize();
+    }
+
+    private void OnDestroy()
+    {
+        Terminate();
+    }
 
     #region UI Updates
     private void CloseAllPanels()
