@@ -44,11 +44,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         Move();
     }
-    private void OnSpace(InputValue inputValue)
+    private void OnTestDeath(InputValue inputValue)
     {
+        Debug.LogWarning("TEST DEATH CALLED");
         if (!photonView.IsMine) return;
 
-        GameManager.Instance.PlayerDied(this);
+        GameManager.Instance.PlayerDied(photonView.ViewID);
     }
     private void OnMove(InputValue inputValue)
     {
@@ -82,6 +83,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Initialize()
     {
+        GameManager.Instance.RegisterPlayer(photonView.ViewID);
         // #Important
         // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
         if (photonView.IsMine)
@@ -124,5 +126,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             //this.IsFiring = (bool)stream.ReceiveNext();
             //this.Health = (float)stream.ReceiveNext();
         }
+    }
+
+    public void Died()
+    {
+        /*
+         * Die stuff...
+         */
     }
 }

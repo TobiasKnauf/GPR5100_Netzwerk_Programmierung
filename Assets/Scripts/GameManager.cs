@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private List<RoomInfo> roomList;
 
-    public List<PlayerController> Players;
+    public List<PhotonView> Players;
 
     private void Awake()
     {
@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (_scene == SceneManager.GetSceneByBuildIndex(1))
         {
-            InstantiateLocalPlayer();
+            StartCoroutine(StartGame(3f));
         }
     }
 
@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                PhotonNetwork.Instantiate(this.playerPrefab.name, this.transform.position, Quaternion.identity);
+                GameObject go = PhotonNetwork.Instantiate(this.playerPrefab.name, this.transform.position, Quaternion.identity);
             }
             else
             {
@@ -149,11 +149,30 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
     }
+    private IEnumerator StartGame(float _startTimer)
+    {
+        InstantiateLocalPlayer();
+        yield return new WaitForSeconds(_startTimer);
+    }
 
-    public void PlayerDied(PlayerController _player)
+    public void RegisterPlayer(int _viewID)
+    {
+        Players.Add(PhotonNetwork.GetPhotonView(_viewID));
+        Debug.Log($"Added {_viewID} to the List");
+    }
+
+    public void PlayerDied(int _viewID)
     {
         if (Players.Count > 0)
-            Players.Remove(_player);
+        {
+            Debug.LogError(_viewID + " died!");
+            if (PlayerController.LocalPlayerInstance.photonView.ViewID == _viewID)
+            {
+                PlayerController.LocalPlayerInstance.Died();
+            }
+            Players.Remove(PhotonNetwork.GetPhotonView(_viewID));
+
+        }
 
         CalculateWin();
     }
@@ -161,7 +180,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if(Players.Count == 1)
         {
-            Debug.Log($"{Players[0]} won!");
+            Debug.LogError($"{Players[0]} won!");    
+
+            /*
+             * Show GameResult UI
+             * 'PLAYER X WON' etc
+             */
         }
     }
 }

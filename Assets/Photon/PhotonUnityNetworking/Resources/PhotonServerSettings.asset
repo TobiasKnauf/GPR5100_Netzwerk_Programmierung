@@ -20,7 +20,7 @@ MonoBehaviour:
     AppVersion: 
     UseNameServer: 1
     FixedRegion: 
-    Server: 10.8.37.242
+    Server: 
     Port: 0
     ProxyServer: 
     Protocol: 0

@@ -143,6 +143,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "TestDeath",
+                    "type": "Button",
+                    "id": "08264745-a62d-4853-871a-f39323b8191e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -220,6 +229,17 @@
                     "processors": "",
                     "groups": "Keyboard & Mouse",
                     "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e0ca0622-1dfe-42e6-aedf-762b91cb9832",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard & Mouse",
+                    "action": "TestDeath",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -388,34 +408,6 @@
                     "processors": "",
                     "groups": "Keyboard & Mouse",
                     "action": "Cancel",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Debug",
-            "id": "c6bd641e-60b1-43f7-b3ed-23fd191da8b9",
-            "actions": [
-                {
-                    "name": "Space",
-                    "type": "Button",
-                    "id": "d935b9d3-51fa-42b7-beba-383fa72336c5",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "886f4924-dfa0-44e2-be49-bfc779d4305f",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Space",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
