@@ -118,7 +118,6 @@ public class UIManager : MonoBehaviour
         PhotonNetwork.CurrentRoom.IsOpen = false;
 
         PhotonNetwork.LoadLevel(1);
-        //SceneManager.LoadScene(1);
     }
     #endregion
 

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Linq;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -38,6 +39,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private List<RoomInfo> roomList;
 
+    public List<PlayerController> Players;
+
     private void Awake()
     {
         Initialize();
@@ -56,7 +59,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void OnSceneLoaded(Scene _scene, LoadSceneMode _mode)
     {
         if (_scene == SceneManager.GetSceneByBuildIndex(1))
+        {
             InstantiateLocalPlayer();
+        }
     }
 
     private void OnDestroy()
@@ -142,6 +147,21 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
             }
+        }
+    }
+
+    public void PlayerDied(PlayerController _player)
+    {
+        if (Players.Count > 0)
+            Players.Remove(_player);
+
+        CalculateWin();
+    }
+    private void CalculateWin()
+    {
+        if(Players.Count == 1)
+        {
+            Debug.Log($"{Players[0]} won!");
         }
     }
 }

@@ -9,7 +9,7 @@ using Photon.Realtime;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 {
-    public static GameObject LocalPlayerInstance;
+    public static PlayerController LocalPlayerInstance;
 
     [SerializeField] private float moveSpeed;
 
@@ -44,7 +44,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         Move();
     }
+    private void OnSpace(InputValue inputValue)
+    {
+        if (!photonView.IsMine) return;
 
+        GameManager.Instance.PlayerDied(this);
+    }
     private void OnMove(InputValue inputValue)
     {
         if (!photonView.IsMine)
@@ -81,7 +86,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
         if (photonView.IsMine)
         {
-            PlayerController.LocalPlayerInstance = this.gameObject;
+            PlayerController.LocalPlayerInstance = this;
         }
         // #Critical
         // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
