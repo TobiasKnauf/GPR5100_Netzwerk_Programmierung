@@ -15,6 +15,7 @@ public class ProjectileController : MonoBehaviour
     [SerializeField] private float flyingThreshold = 10;
     [SerializeField] private TrailRenderer trailRenderer;
     [SerializeField] private VisualEffect collisionVisualEffect;
+    [SerializeField] private AudioClip collisionSFX;
 
     private Vector3 preCollisionVelocity;
 
@@ -71,6 +72,7 @@ public class ProjectileController : MonoBehaviour
     {
         collisionVisualEffect.SetVector3("Velocity", preCollisionVelocity);
         collisionVisualEffect.Play();
+        AudioManager.Instance.PlaySFX(collisionSFX);
         Owner = null;
     }
 }

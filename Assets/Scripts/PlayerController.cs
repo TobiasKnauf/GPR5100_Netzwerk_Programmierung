@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
+using UnityEngine.UI;
 
 using Photon.Pun;
 using Photon.Realtime;
@@ -14,15 +16,20 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private float moveSpeed;
     [SerializeField] private float dashSpeed;
 
+    [SerializeField] private SpriteRenderer body;
     [SerializeField] private SpriteRenderer projectileIndicator;
     [SerializeField] private Color hasProjectileColor;
     [SerializeField] private Color hasNoProjectileColor;
+    [SerializeField] private Image cooldownIndicator;
 
     [SerializeField] private Rigidbody2D rbPlayer;
 
     private Vector2 moveVal;
 
     [SerializeField] private float force;
+    [SerializeField] private float cooldown;
+    [SerializeField] private float dashCooldown;
+    [SerializeField] private float shootCooldown;
 
     private bool isDashing;
 
@@ -32,6 +39,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     PlayerInput playerInput;
 
+    [SerializeField] private VisualEffect deathVisualEffect;
+
+    private Camera cam;
+    private ScreenShake screenShake;
+
     private void Awake()
     {
         Initialize();
@@ -39,7 +51,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Start()
     {
-        //SetCamera();
+        cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+        screenShake = cam.GetComponent<ScreenShake>();
         projectile = GameObject.Find("Projectile").GetComponent<ProjectileController>();
     }
 
@@ -49,6 +62,23 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             return;
         }
+        if (!IsDead)
+            Cooldown();
+    }
+
+    private void Cooldown()
+    {
+        if (cooldown > 0f)
+        {
+            cooldownIndicator.fillAmount = cooldown / .5f;
+            cooldown -= Time.deltaTime;
+        }
+        else
+        {
+            cooldown = 0f;
+            cooldownIndicator.fillAmount = 0f;
+        }
+
     }
 
     private void FixedUpdate()
@@ -97,6 +127,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Move()
     {
+        if (isDashing)
+            return;
         if (moveVal.magnitude > 0.5f)
         {
             rbPlayer.drag = 1f;
@@ -117,18 +149,37 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     IEnumerator Dash()
     {
+        if (cooldown > 0f)
+            yield break;
+
         isDashing = true;
+        rbPlayer.drag = 1f;
         rbPlayer.AddForce(transform.up * dashSpeed, ForceMode2D.Impulse);
+        cooldown = dashCooldown;
         yield return new WaitForSeconds(.3f);
+        rbPlayer.drag = 5f;
         isDashing = false;
     }
 
     private void Shoot()
     {
+        if (cooldown > 0f)
+            return;
+
         projectileIndicator.color = hasNoProjectileColor;
         playerInput.SwitchCurrentActionMap("Gameplay no Weapon");
         Vector2 vec = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - transform.position;
         projectile.Shoot(this, vec, force);
+    }
+
+    private void Die()
+    {
+        IsDead = true;
+        deathVisualEffect.Play();
+        body.enabled = false;
+        projectileIndicator.enabled = false;
+        rbPlayer.simulated = false;
+        screenShake.StartShake(11, 0.7f, 80);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -139,6 +190,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             {
                 if (isDashing)
                 {
+                    cooldown = shootCooldown;
                     projectile.PickUp(this);
                     projectileIndicator.color = hasProjectileColor;
                     playerInput.SwitchCurrentActionMap("Gameplay Weapon");
@@ -149,15 +201,25 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                     rbPlayer.AddForce(collision.attachedRigidbody.velocity, ForceMode2D.Impulse);
                     projectile.Owner = null;
                     projectile.StopFlying();
-                    IsDead = true;
+                    Die();
                 }
                 else
                 {
+                    cooldown = shootCooldown;
                     projectile.PickUp(this);
                     projectileIndicator.color = hasProjectileColor;
                     playerInput.SwitchCurrentActionMap("Gameplay Weapon");
                 }
             }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        float relVelSqrMag = collision.relativeVelocity.sqrMagnitude;
+        if (relVelSqrMag > 5f)
+        {
+            screenShake.StartShake(6, relVelSqrMag * 0.001f, 80);
         }
     }
 
@@ -173,23 +235,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         // #Critical
         // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
         DontDestroyOnLoad(this.gameObject);
-    }
-
-    private void SetCamera()
-    {
-        CameraController _cameraWork = this.gameObject.GetComponent<CameraController>();
-
-        if (_cameraWork != null)
-        {
-            if (photonView.IsMine)
-            {
-                _cameraWork.OnStartFollowing();
-            }
-        }
-        else
-        {
-            Debug.LogError("Missing CameraController Component on playerPrefab.", this);
-        }
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
