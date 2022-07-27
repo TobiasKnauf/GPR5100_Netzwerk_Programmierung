@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private List<RoomInfo> roomList;
 
-    public List<PhotonView> Players;
+    public Dictionary<int, PlayerController> Players = new Dictionary<int, PlayerController>();
 
     private void Awake()
     {
@@ -150,31 +150,40 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void RegisterPlayer(int _viewID)
+    public void RegisterPlayer(int _viewID, PlayerController _controller)
     {
-        Players.Add(PhotonNetwork.GetPhotonView(_viewID));
+        Players.Add(_viewID,_controller);
         Debug.Log($"Added {_viewID} to the List");
     }
 
     public void PlayerDied(int _viewID)
     {
+        UpdateAllPlayers(_viewID);
+
         if (Players.Count > 0)
         {
             Debug.LogError(_viewID + " died!");
-            if (PlayerController.LocalPlayerInstance.photonView.ViewID == _viewID)
-            {
-                PlayerController.LocalPlayerInstance.Died();
-            }
-            Players.Remove(PhotonNetwork.GetPhotonView(_viewID));
+            Players.Remove(_viewID);
         }
 
         CalculateWin();
+    }
+
+    private void UpdateAllPlayers(int _viewID)
+    {
+        foreach(var player in Players)
+        {
+            if(player.Key == _viewID)
+            {
+                player.Value.OnDie();
+            }
+        }
     }
     private void CalculateWin()
     {
         if(Players.Count == 1)
         {
-            Debug.LogError($"{Players[0]} won!");    
+            Debug.LogError($"{Players.ElementAt(0).Key} won!");    
 
             /*
              * Show GameResult UI

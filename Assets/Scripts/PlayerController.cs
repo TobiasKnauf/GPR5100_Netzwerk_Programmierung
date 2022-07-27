@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private Vector2 moveVal;
 
+    [SerializeField] private SpriteRenderer m_SprRenderer;
+
     private void Awake()
     {
         Initialize();
@@ -46,10 +48,28 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void OnTestDeath(InputValue inputValue)
     {
-        Debug.LogWarning("TEST DEATH CALLED");
         if (!photonView.IsMine) return;
 
-        GameManager.Instance.PlayerDied(photonView.ViewID);
+        Call_Dead();
+    }
+
+    public void Call_Dead()
+    {
+        photonView.RPC("PCB_Death", RpcTarget.AllViaServer, this.photonView.ViewID);
+    }
+
+    public void OnDie()
+    {
+        /*
+         * Die stuff...
+         */
+        m_SprRenderer.color = Color.red;
+    }
+
+    [PunRPC]
+    private void PCB_Death(int _viewID)
+    {
+        GameManager.Instance.PlayerDied(_viewID);
     }
     private void OnMove(InputValue inputValue)
     {
@@ -83,7 +103,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Initialize()
     {
-        GameManager.Instance.RegisterPlayer(photonView.ViewID);
+        GameManager.Instance.RegisterPlayer(this.photonView.ViewID, this);
         // #Important
         // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
         if (photonView.IsMine)
@@ -126,12 +146,5 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             //this.IsFiring = (bool)stream.ReceiveNext();
             //this.Health = (float)stream.ReceiveNext();
         }
-    }
-
-    public void Died()
-    {
-        /*
-         * Die stuff...
-         */
     }
 }

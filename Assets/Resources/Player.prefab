@@ -168,6 +168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 200
   rb: {fileID: 3696879535819387943}
+  m_SprRenderer: {fileID: 1045930665234055982}
 --- !u!114 &6981350153850868627
 MonoBehaviour:
   m_ObjectHideFlags: 0

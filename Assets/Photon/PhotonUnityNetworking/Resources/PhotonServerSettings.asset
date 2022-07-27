@@ -20,7 +20,7 @@ MonoBehaviour:
     AppVersion: 
     UseNameServer: 1
     FixedRegion: 
-    Server: 
+    Server: 10.8.37.242
     Port: 0
     ProxyServer: 
     Protocol: 0
@@ -39,6 +39,10 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - UpdateAllPlayers
+  - PlayerDied
+  - Pun_DeathCallback
+  - PCB_Death
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
