@@ -449,6 +449,7 @@ MonoBehaviour:
   shootCooldown: 0.5
   IsDead: 0
   projectile: {fileID: 0}
+  playerInput: {fileID: 4985475777358848454}
   deathVisualEffect: {fileID: 1606749838}
 --- !u!114 &6173075462598792065
 MonoBehaviour:

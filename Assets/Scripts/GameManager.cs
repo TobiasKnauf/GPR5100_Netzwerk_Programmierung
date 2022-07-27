@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     #endregion
 
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject projectilePrefab;
 
     private List<RoomInfo> roomList;
 
@@ -60,9 +61,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (_scene == SceneManager.GetSceneByBuildIndex(1))
         {
             InstantiateLocalPlayer();
+            if (PhotonNetwork.IsMasterClient)
+                InstantiateLocalProjectile();
         }
     }
-
     private void OnDestroy()
     {
         Terminate();
@@ -141,7 +143,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                GameObject go = PhotonNetwork.Instantiate(this.playerPrefab.name, this.transform.position, Quaternion.identity);
+                Vector2 rndPos = Random.insideUnitCircle.normalized * 6;
+                GameObject go = PhotonNetwork.Instantiate(this.playerPrefab.name, rndPos, Quaternion.identity);
             }
             else
             {
@@ -149,10 +152,21 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
     }
+    private void InstantiateLocalProjectile()
+    {
+        if (projectilePrefab == null)
+        {
+            Debug.LogError("Missing projectilePrefab Reference. Please set it up in GameObject 'Game Manager'", this);
+        }
+        else
+        {
+            PhotonNetwork.Instantiate(projectilePrefab.name, Vector2.zero, Quaternion.identity);
+        }
+    }
 
     public void RegisterPlayer(int _viewID, PlayerController _controller)
     {
-        Players.Add(_viewID,_controller);
+        Players.Add(_viewID, _controller);
         Debug.Log($"Added {_viewID} to the List");
     }
 
@@ -171,9 +185,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void UpdateAllPlayers(int _viewID)
     {
-        foreach(var player in Players)
+        foreach (var player in Players)
         {
-            if(player.Key == _viewID)
+            if (player.Key == _viewID)
             {
                 player.Value.OnDie();
             }
@@ -181,9 +195,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     private void CalculateWin()
     {
-        if(Players.Count == 1)
+        if (Players.Count == 1)
         {
-            Debug.LogError($"{Players.ElementAt(0).Key} won!");    
+            Debug.LogError($"{Players.ElementAt(0).Key} won!");
 
             /*
              * Show GameResult UI

@@ -11,14 +11,23 @@ public class Abyss : MonoBehaviour
 
     void Start()
     {
-        projectile = GameObject.Find("Projectile").GetComponent<ProjectileController>();
-        projectileRb = projectile.GetComponent<Rigidbody2D>();
-        polygonCollider2D = GetComponent<PolygonCollider2D>();
+        FindComponents();
         startSize = transform.localScale;
+    }
+    private void FindComponents()
+    {
+        if (!projectile)
+            projectile = GameObject.FindObjectOfType<ProjectileController>();
+        if (!projectileRb)
+            projectileRb = projectile.GetComponent<Rigidbody2D>();
+        if (!polygonCollider2D)
+            polygonCollider2D = GetComponent<PolygonCollider2D>();
     }
 
     void FixedUpdate()
     {
+        FindComponents();
+
         if (polygonCollider2D.bounds.Contains(projectile.transform.position) && !projectile.IsFlying)
         {
             if (transform.localScale.x > 0.1f)

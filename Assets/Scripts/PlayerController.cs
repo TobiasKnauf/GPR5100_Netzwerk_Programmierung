@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     [SerializeField] private ProjectileController projectile;
 
-    PlayerInput playerInput;
+    [SerializeField] PlayerInput playerInput;
 
     [SerializeField] private VisualEffect deathVisualEffect;
 
@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         screenShake = cam.GetComponent<ScreenShake>();
-        projectile = GameObject.Find("Projectile").GetComponent<ProjectileController>();
+        projectile = GameObject.FindObjectOfType<ProjectileController>();
     }
 
     private void Update()
@@ -87,6 +87,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             return;
         }
+
+        if (!projectile)
+            projectile = GameObject.FindObjectOfType<ProjectileController>();
+
         if (!IsDead)
             Move();
     }
@@ -172,7 +176,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         projectile.Shoot(this, vec, force);
     }
 
-    private void Die()
+    public void OnDie()
     {
         IsDead = true;
         deathVisualEffect.Play();
@@ -181,7 +185,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         rbPlayer.simulated = false;
         screenShake.StartShake(11, 0.7f, 80);
     }
+    private void Call_Dead()
+    {
+        photonView.RPC("PCB_Death", RpcTarget.AllViaServer, this.photonView.ViewID);
+    }
 
+    [PunRPC]
+    private void PCB_Death(int _viewID)
+    {
+        GameManager.Instance.PlayerDied(_viewID);
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer == 10)
@@ -201,7 +214,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                     rbPlayer.AddForce(collision.attachedRigidbody.velocity, ForceMode2D.Impulse);
                     projectile.Owner = null;
                     projectile.StopFlying();
-                    Die();
+                    Call_Dead();
                 }
                 else
                 {
@@ -230,7 +243,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine)
         {
             PlayerController.LocalPlayerInstance = this.gameObject;
-            playerInput = GetComponent<PlayerInput>();
         }
         // #Critical
         // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
