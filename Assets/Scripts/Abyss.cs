@@ -19,19 +19,17 @@ public class Abyss : MonoBehaviour
 
     void FixedUpdate()
     {
-
-
-        //if (polygonCollider2D.bounds.Contains(projectile.transform.position) && !projectile.IsFlying)
-        //{
-        //    if (transform.localScale.x > 0.1f)
-        //    {
-        //        transform.localScale -= Vector3.one * Time.fixedDeltaTime;
-        //    }
-        //}
-        //else if (transform.localScale.x < startSize.x)
-        //{
-        //    transform.localScale += Vector3.one * Time.fixedDeltaTime;
-        //}
+        if (polygonCollider2D.bounds.Contains(projectile.transform.position) && !projectile.IsFlying)
+        {
+            if (transform.localScale.x > 0.1f)
+            {
+                transform.localScale -= Vector3.one * Time.fixedDeltaTime;
+            }
+        }
+        else if (transform.localScale.x < startSize.x)
+        {
+            transform.localScale += Vector3.one * Time.fixedDeltaTime;
+        }
 
         //Alternative
 
