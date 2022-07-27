@@ -542,13 +542,69 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+      propertyPath: m_RoomPanel
+      value: 
+      objectReference: {fileID: 466209060}
+    - target: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+      propertyPath: m_StartPanel
+      value: 
+      objectReference: {fileID: 1986738067}
+    - target: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+      propertyPath: m_OptionsPanel
+      value: 
+      objectReference: {fileID: 519298260}
+    - target: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+      propertyPath: m_RoomMapIndex
+      value: 
+      objectReference: {fileID: 2065860566}
+    - target: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+      propertyPath: m_ControlsImage
+      value: 
+      objectReference: {fileID: 1677111667}
+    - target: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+      propertyPath: m_GameplayImage
+      value: 
+      objectReference: {fileID: 1847700214}
+    - target: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+      propertyPath: m_RoomListPanel
+      value: 
+      objectReference: {fileID: 180282118}
+    - target: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+      propertyPath: m_RoomNameInput
+      value: 
+      objectReference: {fileID: 1326989031}
+    - target: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+      propertyPath: m_RoomTitleText
+      value: 
+      objectReference: {fileID: 822892940}
+    - target: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+      propertyPath: m_UserNameInput
+      value: 
+      objectReference: {fileID: 1273035908}
+    - target: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+      propertyPath: m_HostStartButton
+      value: 
+      objectReference: {fileID: 1176485964}
+    - target: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+      propertyPath: m_RoomListContent
+      value: 
+      objectReference: {fileID: 278568952}
+    - target: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+      propertyPath: m_RoomPlayerCount
+      value: 
+      objectReference: {fileID: 352440424}
+    - target: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+      propertyPath: m_ConnectedPlayersContent
+      value: 
+      objectReference: {fileID: 2146892671}
     - target: {fileID: 5535598422235810603, guid: d4e62149d0f946b488746f0825841e83, type: 3}
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
     - target: {fileID: 5535598422235810604, guid: d4e62149d0f946b488746f0825841e83, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5535598422235810604, guid: d4e62149d0f946b488746f0825841e83, type: 3}
       propertyPath: m_LocalPosition.x
@@ -592,6 +648,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+--- !u!114 &85571387 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 85571387, guid: d4e62149d0f946b488746f0825841e83, type: 3}
+  m_PrefabInstance: {fileID: 85571385}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4eb6e1d403016841a44e4d2f13d75c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &136455655
 GameObject:
   m_ObjectHideFlags: 0
@@ -811,7 +878,7 @@ RectTransform:
   m_Children:
   - {fileID: 1022415665}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1702,7 +1769,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 660093272}
+      - m_Target: {fileID: 85571387}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ShowPanel
         m_Mode: 2
@@ -2094,7 +2161,7 @@ RectTransform:
   m_Children:
   - {fileID: 1271613214}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2195,7 +2262,7 @@ RectTransform:
   m_Children:
   - {fileID: 1956763026}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2778,81 +2845,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 658155720}
   m_CullTransparentMesh: 1
---- !u!1 &660093270
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 660093271}
-  - component: {fileID: 660093272}
-  - component: {fileID: 660093273}
-  m_Layer: 0
-  m_Name: UIManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &660093271
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 660093270}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &660093272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 660093270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4eb6e1d403016841a44e4d2f13d75c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 660093273}
-  m_StartPanel: {fileID: 1986738067}
-  m_RoomListPanel: {fileID: 180282118}
-  m_RoomPanel: {fileID: 466209060}
-  m_OptionsPanel: {fileID: 519298260}
-  m_ControlsImage: {fileID: 1677111667}
-  m_GameplayImage: {fileID: 1847700214}
-  m_UserNameInput: {fileID: 1273035908}
-  m_RoomNameInput: {fileID: 1326989031}
-  m_RoomPlayerCount: {fileID: 352440424}
-  m_RoomMapIndex: {fileID: 2065860566}
-  m_RoomListEntryPrefab: {fileID: 8307368658025580053, guid: 6065d85789bfb2a40958436ac0dd9871, type: 3}
-  m_RoomListContent: {fileID: 278568952}
-  m_RoomTitleText: {fileID: 822892940}
-  m_ConnectedPlayersContent: {fileID: 2146892671}
-  m_ListedPlayerPrefab: {fileID: 8695094484876778737, guid: 7e177a4396ab8ff48bbe288b231dd813, type: 3}
-  m_HostStartButton: {fileID: 1176485964}
---- !u!114 &660093273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 660093270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33dbca3f2c683f446b611d899844ec53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UIManager: {fileID: 660093272}
 --- !u!1 &692919364
 GameObject:
   m_ObjectHideFlags: 0
@@ -3152,7 +3144,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 660093272}
+      - m_Target: {fileID: 85571387}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ShowPanel
         m_Mode: 2
@@ -3410,7 +3402,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 181254220}
   m_HandleRect: {fileID: 181254219}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3539,7 +3531,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 70.7
+  m_fontSize: 70.8
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3674,7 +3666,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 96.6
+  m_fontSize: 96.7
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3808,7 +3800,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 660093272}
+      - m_Target: {fileID: 85571387}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ShowPanel
         m_Mode: 2
@@ -3942,7 +3934,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 660093272}
+      - m_Target: {fileID: 85571387}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: OnClick_CreateRoom
         m_Mode: 1
@@ -4821,7 +4813,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 660093272}
+      - m_Target: {fileID: 85571387}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: OnClick_StartRound
         m_Mode: 1
@@ -5334,7 +5326,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 70.7
+  m_fontSize: 70.8
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6652,7 +6644,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 660093272}
+      - m_Target: {fileID: 85571387}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: OnClick_LeaveRoom
         m_Mode: 1
@@ -7241,6 +7233,7 @@ GameObject:
   - component: {fileID: 1685607803}
   - component: {fileID: 1685607802}
   - component: {fileID: 1685607801}
+  - component: {fileID: 1685607804}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -7312,8 +7305,41 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1685607804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685607800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!1 &1805549333
 GameObject:
   m_ObjectHideFlags: 0
@@ -7844,7 +7870,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 660093272}
+      - m_Target: {fileID: 85571387}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ShowPanel
         m_Mode: 2
@@ -8200,7 +8226,7 @@ RectTransform:
   m_Children:
   - {fileID: 2050498838}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -8459,7 +8485,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.3
+  m_fontSize: 39.4
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -8693,7 +8719,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 68.05
+  m_fontSize: 68.1
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -9281,7 +9307,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2132928847
 MonoBehaviour:

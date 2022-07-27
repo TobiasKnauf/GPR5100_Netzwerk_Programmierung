@@ -6,10 +6,35 @@ using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private PlayerNetworkManager player;
+    #region Singleton
+    private static UIManager instance;
+    public static UIManager Instance { get { return instance; } }
+
+    private void Initialize()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+    }
+
+    private void Terminate()
+    {
+        if (this == Instance)
+        {
+            instance = null;
+        }
+    }
+    #endregion
 
     [Header("Panel/Screens")]
     [SerializeField] private Canvas m_StartPanel;
@@ -37,6 +62,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject m_ListedPlayerPrefab;
     [SerializeField] private GameObject m_HostStartButton;
 
+    private void Awake()
+    {
+        Initialize();
+    }
+
+    private void OnDestroy()
+    {
+        Terminate();
+    }
+
     #region UI Updates
     private void CloseAllPanels()
     {
@@ -45,19 +80,15 @@ public class UIManager : MonoBehaviour
         m_RoomPanel.enabled = false;
         m_OptionsPanel.enabled = false;
     }
-    /// <summary>
-    /// Disables all panels and shows the give one
-    /// </summary>
-    /// <param name="_panel">Panel to show</param>
+
     public void ShowPanel(Canvas _panel)
     {
         CloseAllPanels();
         _panel.enabled = true;
     }
-    /// <summary>
-    /// Creates a new List of Room Buttons
-    /// </summary>
-    /// <param name="_roomList">All rooms in the default Lobby</param>
+
+    // Iterates through each room in the default lobby
+    // and creates a new list of room buttons in the room view
     public void CreateNewRoomButtons(List<RoomInfo> _roomList)
     {
         //Clear Room list
@@ -74,9 +105,8 @@ public class UIManager : MonoBehaviour
             newRoomListEntry.GetComponent<Button>().onClick.AddListener(delegate { OnClick_JoinRoom(newRoomListEntry); }); //Assigns new Function to this button
         }
     }
-    /// <summary>
-    /// Creates a new List of Player in the current Room
-    /// </summary>
+
+    // Updates the room panels when a player leaves or quits
     public void UpdatePlayerPanels()
     {
         //Clear Player Panels
@@ -105,33 +135,32 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region Callback Methods
-    /// <summary>
-    /// Called when the user joins a room
-    /// </summary>
+    // Updates UI elements when the user joins a room
     public void OnJoined()
     {
         ShowPanel(m_RoomPanel);
         m_RoomTitleText.text = PhotonNetwork.CurrentRoom.Name;
     }
-    /// <summary>
-    /// Called when the user leaves a room
-    /// </summary>
+
+    // Updates UI elements when the user leaves a room 
     public void OnLeft()
     {
         ShowPanel(m_RoomListPanel);
     }
-    /// <summary>
-    /// Called when the MasterClient starts the match
-    /// </summary>
+
+    // Is called when the host of the room starts the game
     private void OnStart()
     {
         PhotonNetwork.CurrentRoom.IsOpen = false;
 
-        //PhotonNetwork.LoadLevel(#GAMESCENE);
+        PhotonNetwork.LoadLevel(1);
     }
     #endregion
 
     #region Button Click Events
+
+    // Creates a new open and visible room, with the defined amount of max players
+    // Applies the given username to the user
     public void OnClick_CreateRoom()
     {
         if (!string.IsNullOrEmpty(m_UserNameInput.text))
@@ -146,7 +175,11 @@ public class UIManager : MonoBehaviour
             IsOpen = true,
         };
         PhotonNetwork.CreateRoom(m_RoomNameInput.text, options);
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
+
+    // Connects the player to a room
+    // Applies the given username to the user
     public void OnClick_JoinRoom(GameObject _button)
     {
         if (!string.IsNullOrEmpty(m_UserNameInput.text))
@@ -156,6 +189,7 @@ public class UIManager : MonoBehaviour
 
         string roomName = _button.transform.Find("Txt_RoomName").GetComponent<TMP_Text>().text;
         PhotonNetwork.JoinRoom(roomName);
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
     public void OnClick_LeaveRoom()
     {
