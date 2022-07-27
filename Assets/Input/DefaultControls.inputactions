@@ -16,11 +16,11 @@
                 },
                 {
                     "name": "Shoot",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "775d713d-6228-4404-a9cc-2ab9308b09f5",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press(behavior=2)",
+                    "interactions": "Press",
                     "initialStateCheck": true
                 },
                 {
@@ -132,7 +132,7 @@
                     "id": "c8bc498f-915d-41e2-9ebc-751ea90e0fa9",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 },
                 {
