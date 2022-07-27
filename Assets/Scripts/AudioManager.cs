@@ -40,7 +40,15 @@ public class AudioManager : MonoBehaviour
     }
     #endregion
 
-    [SerializeField] List<AudioClip> sfxClips = new List<AudioClip> ();
+    AudioSource audioSource;
 
-    [SerializeField] List<AudioClip> musicClips = new List<AudioClip> ();
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
+    public void PlaySFX(AudioClip _audioClip)
+    {
+        audioSource.PlayOneShot(_audioClip);
+    }
 }
