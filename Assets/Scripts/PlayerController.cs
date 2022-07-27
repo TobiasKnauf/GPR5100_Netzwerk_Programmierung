@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         screenShake = cam.GetComponent<ScreenShake>();
-        projectile = GameObject.FindObjectOfType<ProjectileController>();
+        projectile = GameManager.Instance.Projectile;
     }
 
     private void Update()
@@ -119,6 +119,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             return;
 
         Shoot();
+        photonView.RPC("SyncShoot", RpcTarget.All);
     }
 
     private void OnMenu(InputValue inputValue)
@@ -173,9 +174,21 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         projectileIndicator.color = hasNoProjectileColor;
         playerInput.SwitchCurrentActionMap("Gameplay no Weapon");
         Vector2 vec = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - transform.position;
-        projectile.Shoot(this, vec, force);
+        projectile.Shoot( vec, force);
     }
 
+    [PunRPC]
+    private void SyncShoot()
+    {
+        Debug.LogError("SHOT");
+        Shoot();
+    }
+    [PunRPC]
+    private void SyncPickup()
+    {
+        Debug.LogError("PICK UP");
+        projectile.PickUp(photonView.ViewID);
+    }
     public void OnDie()
     {
         IsDead = true;
@@ -204,7 +217,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 if (isDashing)
                 {
                     cooldown = shootCooldown;
-                    projectile.PickUp(this);
+                    projectile.PickUp(photonView.ViewID);
+                    photonView.RPC("SyncPickup", RpcTarget.All);
                     projectileIndicator.color = hasProjectileColor;
                     playerInput.SwitchCurrentActionMap("Gameplay Weapon");
 
@@ -219,7 +233,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 else
                 {
                     cooldown = shootCooldown;
-                    projectile.PickUp(this);
+                    projectile.PickUp(photonView.ViewID);
+                    photonView.RPC("SyncPickup", RpcTarget.All);
                     projectileIndicator.color = hasProjectileColor;
                     playerInput.SwitchCurrentActionMap("Gameplay Weapon");
                 }
@@ -238,6 +253,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Initialize()
     {
+        GameManager.Instance.RegisterPlayer(this.photonView.ViewID, this);
         // #Important
         // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
         if (photonView.IsMine)

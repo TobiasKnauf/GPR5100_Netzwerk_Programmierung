@@ -1,13 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class Abyss : MonoBehaviour
+public class Abyss : MonoBehaviourPunCallbacks, IPunObservable
 {
     private ProjectileController projectile;
     private Rigidbody2D projectileRb;
     private PolygonCollider2D polygonCollider2D;
     private Vector3 startSize;
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // We own this player: send the others our data
+        }
+        else
+        {
+            // Network player, receive data
+        }
+    }
 
     void Start()
     {
@@ -17,9 +31,9 @@ public class Abyss : MonoBehaviour
     private void FindComponents()
     {
         if (!projectile)
-            projectile = GameObject.FindObjectOfType<ProjectileController>();
+            projectile = GameManager.Instance.Projectile;
         if (!projectileRb)
-            projectileRb = projectile.GetComponent<Rigidbody2D>();
+            projectileRb = projectile.rb;
         if (!polygonCollider2D)
             polygonCollider2D = GetComponent<PolygonCollider2D>();
     }

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5535598422235810605}
   - component: {fileID: 85571387}
   - component: {fileID: 1586600225}
+  - component: {fileID: 5020076339237498074}
   m_Layer: 2
   m_Name: GameManager
   m_TagString: GameManager
@@ -50,6 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 1045930665321588829, guid: c0fb115fb8b40934991792b825b61836, type: 3}
   projectilePrefab: {fileID: 562171942872256497, guid: 78010192909b4024fb39d6e4043cad58, type: 3}
+  Projectile: {fileID: 0}
 --- !u!114 &5535598422235810607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,3 +232,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5020076339237498074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5535598422235810603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

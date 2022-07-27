@@ -37,6 +37,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject projectilePrefab;
 
+    public ProjectileController Projectile;
+
     private List<RoomInfo> roomList;
 
     public Dictionary<int, PlayerController> Players = new Dictionary<int, PlayerController>();
@@ -61,8 +63,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (_scene == SceneManager.GetSceneByBuildIndex(1))
         {
             InstantiateLocalPlayer();
-            if (PhotonNetwork.IsMasterClient)
-                InstantiateLocalProjectile();
+            InstantiateLocalProjectile();
         }
     }
     private void OnDestroy()
@@ -152,16 +153,26 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
     }
+
     private void InstantiateLocalProjectile()
     {
-        if (projectilePrefab == null)
+        if (PhotonNetwork.IsMasterClient)
         {
-            Debug.LogError("Missing projectilePrefab Reference. Please set it up in GameObject 'Game Manager'", this);
+            if (projectilePrefab == null)
+            {
+                Debug.LogError("Missing projectilePrefab Reference. Please set it up in GameObject 'Game Manager'", this);
+            }
+            else
+            {
+                PhotonNetwork.Instantiate(projectilePrefab.name, Vector2.zero, Quaternion.identity);
+                photonView.RPC("GetProjectilePrefab", RpcTarget.AllBufferedViaServer);
+            }
         }
-        else
-        {
-            PhotonNetwork.Instantiate(projectilePrefab.name, Vector2.zero, Quaternion.identity);
-        }
+    }
+    [PunRPC]
+    private void GetProjectilePrefab()
+    {
+        Projectile = FindObjectOfType<ProjectileController>();
     }
 
     public void RegisterPlayer(int _viewID, PlayerController _controller)

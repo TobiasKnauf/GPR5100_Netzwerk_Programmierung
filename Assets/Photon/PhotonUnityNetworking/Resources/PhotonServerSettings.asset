@@ -43,6 +43,9 @@ MonoBehaviour:
   - PlayerDied
   - Pun_DeathCallback
   - PCB_Death
+  - GetProjectilePrefab
+  - SyncShoot
+  - SyncPickup
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
