@@ -9,6 +9,9 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 
+using System.Linq;
+using System;
+
 public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 {
     public static GameObject LocalPlayerInstance;
@@ -174,20 +177,23 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         projectileIndicator.color = hasNoProjectileColor;
         playerInput.SwitchCurrentActionMap("Gameplay no Weapon");
         Vector2 vec = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - transform.position;
-        projectile.Shoot( vec, force);
+        projectile.Shoot(vec, force);
     }
 
     [PunRPC]
     private void SyncShoot()
     {
-        Debug.LogError("SHOT");
         Shoot();
     }
     [PunRPC]
     private void SyncPickup()
     {
-        Debug.LogError("PICK UP");
         projectile.PickUp(photonView.ViewID);
+    }
+    [PunRPC]
+    private void PCB_Death(int _viewID)
+    {
+        GameManager.Instance.PlayerDied(_viewID);
     }
     public void OnDie()
     {
@@ -200,13 +206,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void Call_Dead()
     {
-        photonView.RPC("PCB_Death", RpcTarget.AllViaServer, this.photonView.ViewID);
-    }
-
-    [PunRPC]
-    private void PCB_Death(int _viewID)
-    {
-        GameManager.Instance.PlayerDied(_viewID);
+        photonView.RPC("PCB_Death", RpcTarget.All, this.photonView.ViewID);
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -254,6 +254,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private void Initialize()
     {
         GameManager.Instance.RegisterPlayer(this.photonView.ViewID, this);
+        ChangePlayerColor();
+
         // #Important
         // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
         if (photonView.IsMine)
@@ -263,6 +265,27 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         // #Critical
         // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
         DontDestroyOnLoad(this.gameObject);
+    }
+
+    private void ChangePlayerColor()
+    {
+        switch (photonView.ViewID)
+        {
+            case 1001:
+                body.color = GameManager.Instance.PlayerColors[0];
+                break;
+            case 2001:
+                body.color = GameManager.Instance.PlayerColors[1];
+                break;
+            case 3001:
+                body.color = GameManager.Instance.PlayerColors[2];
+                break;
+            case 4001:
+                body.color = GameManager.Instance.PlayerColors[3];
+                break;
+            default:
+                break;
+        }
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -280,4 +303,30 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             //this.Health = (float)stream.ReceiveNext();
         }
     }
+    #region Player Leaves Edgecases
+    private void OnDestroy()
+    {
+        GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
+    }
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
+        base.OnDisconnected(cause);
+    }
+    public override void OnLeftRoom()
+    {
+        GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
+        base.OnLeftRoom();
+    }
+    public override void OnLeftLobby()
+    {
+        GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
+        base.OnLeftLobby();
+    }
+    public override void OnDisable()
+    {
+        GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
+        base.OnDisable();
+    }
+    #endregion
 }

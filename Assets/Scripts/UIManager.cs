@@ -113,19 +113,11 @@ public class UIManager : MonoBehaviour
         foreach (Transform t in m_ConnectedPlayersContent)
             Destroy(t.gameObject);
 
-        Color[] colors =
-        {
-            Color.red,
-            Color.green,
-            Color.blue,
-            Color.yellow,
-        };
-
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
             GameObject newPlayer = Instantiate(m_ListedPlayerPrefab, m_ConnectedPlayersContent);
             newPlayer.GetComponentInChildren<TMP_Text>().text = PhotonNetwork.PlayerList[i].NickName; //Show player name
-            newPlayer.GetComponent<Image>().color = colors[i]; //Set player color
+            newPlayer.GetComponent<Image>().color = GameManager.Instance.PlayerColors[i]; //Set player color
         }
     }
     public void ShowHostStartButton(bool _visibility = true)
@@ -174,7 +166,12 @@ public class UIManager : MonoBehaviour
             IsVisible = true, //needs to be true so the roomlist will be updated
             IsOpen = true,
         };
-        PhotonNetwork.CreateRoom(m_RoomNameInput.text, options);
+
+        string roomName = m_RoomNameInput.text;
+        if (string.IsNullOrEmpty(roomName))
+            roomName = PhotonNetwork.NickName + "'s room";
+
+        PhotonNetwork.CreateRoom(roomName, options);
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 

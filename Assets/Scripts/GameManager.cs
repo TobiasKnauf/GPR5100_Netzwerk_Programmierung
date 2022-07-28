@@ -43,6 +43,14 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public Dictionary<int, PlayerController> Players = new Dictionary<int, PlayerController>();
 
+    public Color32[] PlayerColors = new Color32[]
+    {
+        new Color32(203,47,44, 255), // red
+        new Color32(27,150,186,255), //blue
+        new Color32(241,190,67,255), //yellow
+        new Color32(75,140,45,255) //green
+    };
+
     private void Awake()
     {
         Initialize();
@@ -145,7 +153,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
                 Vector2 rndPos = Random.insideUnitCircle.normalized * 6;
-                GameObject go = PhotonNetwork.Instantiate(this.playerPrefab.name, rndPos, Quaternion.identity);
+                PhotonNetwork.Instantiate(this.playerPrefab.name, rndPos, Quaternion.identity);
             }
             else
             {
@@ -153,7 +161,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
     }
-
     private void InstantiateLocalProjectile()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -179,6 +186,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Players.Add(_viewID, _controller);
         Debug.Log($"Added {_viewID} to the List");
+    }
+    public void UnRegisterPlayer(int _viewID)
+    {
+        Players.Remove(_viewID);
+        Debug.Log($"Removed {_viewID} from the List");
     }
 
     public void PlayerDied(int _viewID)

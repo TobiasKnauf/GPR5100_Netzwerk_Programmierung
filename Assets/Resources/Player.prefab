@@ -139,7 +139,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1795776111}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.00125, y: 0.00125, z: 0.00125}
   m_ConstrainProportionsScale: 1
@@ -234,7 +234,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.8862746, g: 0.91372555, b: 0.91372555, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -344,7 +344,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.7928543, g: 0, b: 1, a: 1}
+  m_Color: {r: 0.7960785, g: 0.18431373, b: 0.17254902, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -439,8 +439,8 @@ MonoBehaviour:
   dashSpeed: 16
   body: {fileID: 1045930665234055982}
   projectileIndicator: {fileID: 6571519428525330500}
-  hasProjectileColor: {r: 0.9960785, g: 0.3019608, b: 0.14901961, a: 1}
-  hasNoProjectileColor: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 1}
+  hasProjectileColor: {r: 0.9450981, g: 0.74509805, b: 0.2627451, a: 1}
+  hasNoProjectileColor: {r: 0.13725491, g: 0.13333334, b: 0.12941177, a: 1}
   cooldownIndicator: {fileID: 1795776113}
   rbPlayer: {fileID: 3696879535819387943}
   force: 18
@@ -468,7 +468,7 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 3
   OwnershipTransfer: 0
-  observableSearch: 0
+  observableSearch: 1
   ObservedComponents:
   - {fileID: 1297538680028062524}
   - {fileID: 7548580891496745297}
@@ -654,7 +654,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 3
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
+  m_Color: {r: 0.8862746, g: 0.91372555, b: 0.91372555, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

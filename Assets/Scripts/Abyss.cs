@@ -6,9 +6,7 @@ using Photon.Realtime;
 
 public class Abyss : MonoBehaviourPunCallbacks, IPunObservable
 {
-    private ProjectileController projectile;
-    private Rigidbody2D projectileRb;
-    private PolygonCollider2D polygonCollider2D;
+    [SerializeField]private PolygonCollider2D polygonCollider2D;
     private Vector3 startSize;
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -25,24 +23,11 @@ public class Abyss : MonoBehaviourPunCallbacks, IPunObservable
 
     void Start()
     {
-        FindComponents();
         startSize = transform.localScale;
     }
-    private void FindComponents()
-    {
-        if (!projectile)
-            projectile = GameManager.Instance.Projectile;
-        if (!projectileRb)
-            projectileRb = projectile.rb;
-        if (!polygonCollider2D)
-            polygonCollider2D = GetComponent<PolygonCollider2D>();
-    }
-
     void FixedUpdate()
     {
-        FindComponents();
-
-        if (polygonCollider2D.bounds.Contains(projectile.transform.position) && !projectile.IsFlying)
+        if (polygonCollider2D.bounds.Contains(GameManager.Instance.Projectile.transform.position) && !GameManager.Instance.Projectile.IsFlying)
         {
             if (transform.localScale.x > 0.1f)
             {
@@ -56,9 +41,9 @@ public class Abyss : MonoBehaviourPunCallbacks, IPunObservable
 
         //Alternative
 
-        if (polygonCollider2D.bounds.Contains(projectile.transform.position))
+        if (polygonCollider2D.bounds.Contains(GameManager.Instance.Projectile.transform.position))
         {
-            projectileRb.AddForce(projectileRb.velocity);
+            GameManager.Instance.Projectile.rb.AddForce(GameManager.Instance.Projectile.rb.velocity);
         }
     }
 }
