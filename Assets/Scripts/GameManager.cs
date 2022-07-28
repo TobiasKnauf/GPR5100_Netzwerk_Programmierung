@@ -127,7 +127,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        UIManager.Instance.UpdatePlayerPanels();
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
+            UIManager.Instance.UpdatePlayerPanels();
 
         if (PhotonNetwork.IsMasterClient)
             UIManager.Instance.ShowHostStartButton();
@@ -189,8 +190,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     public void UnRegisterPlayer(int _viewID)
     {
-        Players.Remove(_viewID);
-        Debug.Log($"Removed {_viewID} from the List");
+        if (Players.ContainsKey(_viewID))
+        {
+            Players.Remove(_viewID);
+            Debug.Log($"Removed {_viewID} from the List");
+        }
     }
 
     public void PlayerDied(int _viewID)
