@@ -183,7 +183,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void SyncShoot()
     {
-        Shoot();
+        projectile.StartFlying();
     }
     [PunRPC]
     private void SyncPickup()

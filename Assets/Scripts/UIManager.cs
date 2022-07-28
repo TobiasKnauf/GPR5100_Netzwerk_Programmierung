@@ -109,15 +109,19 @@ public class UIManager : MonoBehaviour
     // Updates the room panels when a player leaves or quits
     public void UpdatePlayerPanels()
     {
-        //Clear Player Panels
-        foreach (Transform t in m_ConnectedPlayersContent)
-            Destroy(t.gameObject);
-
-        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
         {
-            GameObject newPlayer = Instantiate(m_ListedPlayerPrefab, m_ConnectedPlayersContent);
-            newPlayer.GetComponentInChildren<TMP_Text>().text = PhotonNetwork.PlayerList[i].NickName; //Show player name
-            newPlayer.GetComponent<Image>().color = GameManager.Instance.PlayerColors[i]; //Set player color
+
+            //Clear Player Panels
+            foreach (Transform t in m_ConnectedPlayersContent)
+                Destroy(t.gameObject);
+
+            for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+            {
+                GameObject newPlayer = Instantiate(m_ListedPlayerPrefab, m_ConnectedPlayersContent);
+                newPlayer.GetComponentInChildren<TMP_Text>().text = PhotonNetwork.PlayerList[i].NickName; //Show player name
+                newPlayer.GetComponent<Image>().color = GameManager.Instance.PlayerColors[i]; //Set player color
+            }
         }
     }
     public void ShowHostStartButton(bool _visibility = true)

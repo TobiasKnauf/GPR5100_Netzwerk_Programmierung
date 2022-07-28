@@ -39,10 +39,11 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    private void StartFlying()
+    public void StartFlying()
     {
-        IsFlying = true;
+        Debug.Log($"Owner is {Owner}");
         transform.position = Owner.transform.position;
+        IsFlying = true;
         trailRenderer.Clear();
         trailRenderer.emitting = true;
         rb.bodyType = RigidbodyType2D.Dynamic;
@@ -61,6 +62,7 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunObservable
         Owner = GameManager.Instance.Players[_player];
         StopFlying();
         transform.position = poolingPosition;
+        Debug.Log($"Owner is {Owner}");
     }
 
     public void Shoot(Vector2 _direction, float _force)
