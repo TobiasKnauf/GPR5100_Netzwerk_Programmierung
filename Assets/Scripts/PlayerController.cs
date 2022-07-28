@@ -183,12 +183,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void SyncShoot()
     {
-        projectile.StartFlying();
+        Shoot();
     }
     [PunRPC]
-    private void SyncPickup()
+    private void SyncPickup(int _viewID)
     {
-        projectile.PickUp(photonView.ViewID);
+        projectile.PickUp(_viewID);
     }
     [PunRPC]
     private void PCB_Death(int _viewID)
@@ -218,7 +218,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 {
                     cooldown = shootCooldown;
                     projectile.PickUp(photonView.ViewID);
-                    photonView.RPC("SyncPickup", RpcTarget.All);
+                    photonView.RPC("SyncPickup", RpcTarget.All, photonView.ViewID);
                     projectileIndicator.color = hasProjectileColor;
                     playerInput.SwitchCurrentActionMap("Gameplay Weapon");
 
@@ -234,7 +234,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 {
                     cooldown = shootCooldown;
                     projectile.PickUp(photonView.ViewID);
-                    photonView.RPC("SyncPickup", RpcTarget.All);
+                    photonView.RPC("SyncPickup", RpcTarget.All, photonView.ViewID);
                     projectileIndicator.color = hasProjectileColor;
                     playerInput.SwitchCurrentActionMap("Gameplay Weapon");
                 }
