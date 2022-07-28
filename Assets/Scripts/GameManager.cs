@@ -91,8 +91,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     public override void OnRoomListUpdate(List<RoomInfo> _list)
     {
-        roomList = _list;
-        UIManager.Instance.CreateNewRoomButtons(roomList);
+
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
+        {
+            roomList = _list;
+            UIManager.Instance.CreateNewRoomButtons(roomList);
+        }
 
         base.OnRoomListUpdate(roomList);
     }
@@ -103,37 +107,48 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        UIManager.Instance.OnJoined();
-        UIManager.Instance.UpdatePlayerPanels();
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
+        {
+            UIManager.Instance.OnJoined();
+            UIManager.Instance.UpdatePlayerPanels();
 
-        if (PhotonNetwork.IsMasterClient)
-            UIManager.Instance.ShowHostStartButton();
-        else
-            UIManager.Instance.ShowHostStartButton(false);
+            if (PhotonNetwork.IsMasterClient)
+                UIManager.Instance.ShowHostStartButton();
+            else
+                UIManager.Instance.ShowHostStartButton(false);
+        }
 
         base.OnJoinedRoom();
     }
     public override void OnLeftRoom()
     {
-        UIManager.Instance.ShowHostStartButton(false);
-        UIManager.Instance.OnLeft();
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
+        {
+            UIManager.Instance.ShowHostStartButton(false);
+            UIManager.Instance.OnLeft();
+        }
         base.OnLeftRoom();
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        UIManager.Instance.UpdatePlayerPanels();
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
+        {
+            UIManager.Instance.UpdatePlayerPanels();
+        }
 
         base.OnPlayerEnteredRoom(newPlayer);
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
+        {
             UIManager.Instance.UpdatePlayerPanels();
 
-        if (PhotonNetwork.IsMasterClient)
-            UIManager.Instance.ShowHostStartButton();
-        else
-            UIManager.Instance.ShowHostStartButton(false);
+            if (PhotonNetwork.IsMasterClient)
+                UIManager.Instance.ShowHostStartButton();
+            else
+                UIManager.Instance.ShowHostStartButton(false);
+        }
 
         base.OnPlayerLeftRoom(otherPlayer);
     }
