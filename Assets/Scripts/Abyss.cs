@@ -4,28 +4,23 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class Abyss : MonoBehaviourPunCallbacks, IPunObservable
+public class Abyss : MonoBehaviourPunCallbacks
 {
-    [SerializeField]private PolygonCollider2D polygonCollider2D;
+    [SerializeField] private PolygonCollider2D polygonCollider2D;
     private Vector3 startSize;
-
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.IsWriting)
-        {
-            // We own this player: send the others our data
-        }
-        else
-        {
-            // Network player, receive data
-        }
-    }
 
     void Start()
     {
         startSize = transform.localScale;
     }
     void FixedUpdate()
+    {
+        if (polygonCollider2D.bounds.Contains(GameManager.Instance.Projectile.transform.position))
+        {
+            GameManager.Instance.Projectile.rb.AddForce(GameManager.Instance.Projectile.rb.velocity);
+        }
+    }
+    private void Update()
     {
         if (polygonCollider2D.bounds.Contains(GameManager.Instance.Projectile.transform.position) && !GameManager.Instance.Projectile.IsFlying)
         {
@@ -37,13 +32,6 @@ public class Abyss : MonoBehaviourPunCallbacks, IPunObservable
         else if (transform.localScale.x < startSize.x)
         {
             transform.localScale += Vector3.one * Time.fixedDeltaTime;
-        }
-
-        //Alternative
-
-        if (polygonCollider2D.bounds.Contains(GameManager.Instance.Projectile.transform.position))
-        {
-            GameManager.Instance.Projectile.rb.AddForce(GameManager.Instance.Projectile.rb.velocity);
         }
     }
 }

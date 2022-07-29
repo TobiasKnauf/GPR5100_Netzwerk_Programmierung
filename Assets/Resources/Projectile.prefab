@@ -130,7 +130,7 @@ TrailRenderer:
   m_Time: 0.2
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.7
+    widthMultiplier: 0.5
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -184,8 +184,8 @@ TrailRenderer:
       m_Mode: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 2
+    numCapVertices: 2
     alignment: 0
     textureMode: 0
     shadowBias: 0.5
@@ -401,8 +401,8 @@ GameObject:
   - component: {fileID: 562171942872256396}
   - component: {fileID: 562171942872256399}
   - component: {fileID: 562171942872256498}
-  - component: {fileID: 562171942872256499}
   - component: {fileID: 562171942872256393}
+  - component: {fileID: 562171942872256499}
   - component: {fileID: 562171942872256496}
   - component: {fileID: 562171942872256398}
   m_Layer: 9
@@ -420,8 +420,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 562171942872256497}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 562171942073167723}
@@ -443,11 +443,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Owner: {fileID: 0}
   IsFlying: 0
-  poolingPosition: {x: -100, y: -100, z: 0}
+  poolingPosition: {x: -20, y: -20, z: 0}
   rb: {fileID: 562171942872256496}
   circleCollider: {fileID: 562171942872256398}
   circleTrigger: {fileID: 562171942073167720}
-  flyingThreshold: 9
+  flyingThreshold: 6
   trailRenderer: {fileID: 562171942022166377}
   collisionVisualEffect: {fileID: 562171942549222404}
   collisionSFX: {fileID: 8300000, guid: d5f1a5802f11fea438524fc3cbcb9af6, type: 3}
@@ -468,30 +468,13 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 3
   OwnershipTransfer: 0
-  observableSearch: 0
+  observableSearch: 1
   ObservedComponents:
-  - {fileID: 562171942872256399}
-  - {fileID: 562171942872256499}
   - {fileID: 562171942872256393}
+  - {fileID: 562171942872256499}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &562171942872256499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 562171942872256497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizeVelocity: 1
-  m_SynchronizeAngularVelocity: 0
-  m_TeleportEnabled: 0
-  m_TeleportIfDistanceGreaterThan: 3
 --- !u!114 &562171942872256393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -508,6 +491,22 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &562171942872256499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 562171942872256497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizeVelocity: 1
+  m_SynchronizeAngularVelocity: 1
+  m_TeleportEnabled: 1
+  m_TeleportIfDistanceGreaterThan: 3
 --- !u!50 &562171942872256496
 Rigidbody2D:
   serializedVersion: 4
@@ -521,11 +520,11 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0.055
+  m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 6200000, guid: a868edb22f672694290c5a6a6ad884a8, type: 2}
-  m_Interpolate: 1
+  m_Interpolate: 2
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0

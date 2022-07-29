@@ -49,6 +49,7 @@ MonoBehaviour:
   - SyncColor
   - SyncDeath
   - SyncPlayerColor
+  - SyncClearOwner
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

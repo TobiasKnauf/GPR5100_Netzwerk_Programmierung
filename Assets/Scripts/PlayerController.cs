@@ -61,10 +61,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        if (!photonView.IsMine && PhotonNetwork.IsConnected)
-        {
-            return;
-        }
+        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
+
         if (!IsDead)
             Cooldown();
     }
@@ -86,10 +84,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void FixedUpdate()
     {
-        if (!photonView.IsMine && PhotonNetwork.IsConnected)
-        {
-            return;
-        }
+        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
 
         if (!projectile)
             projectile = GameObject.FindObjectOfType<ProjectileController>();
@@ -102,33 +97,30 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnMove(InputValue inputValue)
     {
-        if (!photonView.IsMine)
-            return;
+        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
 
         moveVal = inputValue.Get<Vector2>();
     }
 
     private void OnDash(InputValue inputValue)
     {
-        if (!photonView.IsMine)
-            return;
+        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
 
         StartCoroutine(Dash());
     }
 
     private void OnShoot(InputValue inputValue)
     {
-        if (!photonView.IsMine)
-            return;
+        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
 
         Shoot();
         photonView.RPC("SyncShoot", RpcTarget.All);
+        PhotonNetwork.SendAllOutgoingCommands();
     }
 
     private void OnMenu(InputValue inputValue)
     {
-        if (!photonView.IsMine)
-            return;
+        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
     }
 
     #endregion
@@ -183,7 +175,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void SyncShoot()
     {
-        Shoot();
+        projectile.StartFlying();
     }
     [PunRPC]
     private void SyncPickup(int _viewID)
@@ -207,6 +199,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private void Call_Dead()
     {
         photonView.RPC("PCB_Death", RpcTarget.All, this.photonView.ViewID);
+        PhotonNetwork.SendAllOutgoingCommands();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -216,30 +209,31 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             {
                 if (isDashing)
                 {
-                    cooldown = shootCooldown;
-                    projectile.PickUp(photonView.ViewID);
-                    photonView.RPC("SyncPickup", RpcTarget.All, photonView.ViewID);
-                    projectileIndicator.color = hasProjectileColor;
-                    playerInput.SwitchCurrentActionMap("Gameplay Weapon");
+                    PickUpProjectile();
 
                 }
                 else if (projectile.IsFlying)
                 {
-                    rbPlayer.AddForce(collision.attachedRigidbody.velocity, ForceMode2D.Impulse);
-                    projectile.Owner = null;
                     projectile.StopFlying();
+                    PhotonNetwork.SendAllOutgoingCommands();
                     Call_Dead();
                 }
                 else
                 {
-                    cooldown = shootCooldown;
-                    projectile.PickUp(photonView.ViewID);
-                    photonView.RPC("SyncPickup", RpcTarget.All, photonView.ViewID);
-                    projectileIndicator.color = hasProjectileColor;
-                    playerInput.SwitchCurrentActionMap("Gameplay Weapon");
+                    PickUpProjectile();
                 }
             }
         }
+    }
+
+    private void PickUpProjectile()
+    {
+        cooldown = shootCooldown;
+        projectile.PickUp(photonView.ViewID);
+        photonView.RPC("SyncPickup", RpcTarget.All, photonView.ViewID);
+        PhotonNetwork.SendAllOutgoingCommands();
+        projectileIndicator.color = hasProjectileColor;
+        playerInput.SwitchCurrentActionMap("Gameplay Weapon");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

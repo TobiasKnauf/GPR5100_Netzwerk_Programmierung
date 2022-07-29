@@ -436,14 +436,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 400
-  dashSpeed: 16
+  dashSpeed: 12
   body: {fileID: 1045930665234055982}
   projectileIndicator: {fileID: 6571519428525330500}
   hasProjectileColor: {r: 0.9450981, g: 0.74509805, b: 0.2627451, a: 1}
   hasNoProjectileColor: {r: 0.13725491, g: 0.13333334, b: 0.12941177, a: 1}
   cooldownIndicator: {fileID: 1795776113}
   rbPlayer: {fileID: 3696879535819387943}
-  force: 18
+  force: 12
   cooldown: 0
   dashCooldown: 0.5
   shootCooldown: 0.5
@@ -505,8 +505,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SynchronizeVelocity: 1
-  m_SynchronizeAngularVelocity: 0
-  m_TeleportEnabled: 0
+  m_SynchronizeAngularVelocity: 1
+  m_TeleportEnabled: 1
   m_TeleportIfDistanceGreaterThan: 3
 --- !u!50 &3696879535819387943
 Rigidbody2D:
@@ -525,7 +525,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
-  m_Interpolate: 1
+  m_Interpolate: 2
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0

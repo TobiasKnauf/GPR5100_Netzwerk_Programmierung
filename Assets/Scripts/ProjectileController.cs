@@ -5,7 +5,7 @@ using UnityEngine.VFX;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class ProjectileController : MonoBehaviourPunCallbacks, IPunObservable
+public class ProjectileController : MonoBehaviourPunCallbacks
 {
     public PlayerController Owner;
     public bool IsFlying;
@@ -20,30 +20,26 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private AudioClip collisionSFX;
     private Vector3 preCollisionVelocity;
 
-    private void FixedUpdate()
+    private void Update()
     {
+        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
+
         if (IsFlying)
         {
             preCollisionVelocity = rb.velocity;
             if (Owner == null)
-                Fly();
-        }
-
-    }
-
-    private void Fly()
-    {
-        if (rb.velocity.magnitude < flyingThreshold)
-        {
-            StopFlying();
+                if (rb.velocity.magnitude < flyingThreshold)
+                {
+                    StopFlying();
+                }
         }
     }
+
 
     public void StartFlying()
     {
-        Debug.Log($"Owner is {Owner}");
-        transform.position = Owner.transform.position;
         IsFlying = true;
+        transform.position = Owner.transform.position;
         trailRenderer.Clear();
         trailRenderer.emitting = true;
         rb.bodyType = RigidbodyType2D.Dynamic;
@@ -59,10 +55,9 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunObservable
 
     public void PickUp(int _player)
     {
-        Owner = GameManager.Instance.Players[_player];
         StopFlying();
+        Owner = GameManager.Instance.Players[_player];
         transform.position = poolingPosition;
-        Debug.Log($"Owner is {Owner}");
     }
 
     public void Shoot(Vector2 _direction, float _force)
@@ -71,24 +66,11 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunObservable
         rb.AddForce(_direction.normalized * _force, ForceMode2D.Impulse);
     }
 
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         collisionVisualEffect.SetVector3("Velocity", preCollisionVelocity);
         collisionVisualEffect.Play();
         AudioManager.Instance.PlaySFX(collisionSFX);
         Owner = null;
-    }
-
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.IsWriting)
-        {
-            // We own this player: send the others our data
-        }
-        else
-        {
-            // Network player, receive data
-        }
     }
 }
