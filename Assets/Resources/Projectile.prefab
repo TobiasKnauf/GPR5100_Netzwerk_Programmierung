@@ -441,7 +441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d059dc988af264e4db413dc69c6d5868, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Owner: {fileID: 0}
+  PlayerOwner: {fileID: 0}
   IsFlying: 0
   poolingPosition: {x: -100, y: -100, z: 0}
   rb: {fileID: 562171942872256496}
@@ -467,10 +467,9 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 0
+  OwnershipTransfer: 2
+  observableSearch: 2
   ObservedComponents:
-  - {fileID: 562171942872256399}
   - {fileID: 562171942872256499}
   - {fileID: 562171942872256393}
   sceneViewId: 0
@@ -489,8 +488,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SynchronizeVelocity: 1
-  m_SynchronizeAngularVelocity: 0
-  m_TeleportEnabled: 0
+  m_SynchronizeAngularVelocity: 1
+  m_TeleportEnabled: 1
   m_TeleportIfDistanceGreaterThan: 3
 --- !u!114 &562171942872256393
 MonoBehaviour:
@@ -506,7 +505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
+  m_SynchronizeScale: 1
   m_UseLocal: 1
 --- !u!50 &562171942872256496
 Rigidbody2D:

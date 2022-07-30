@@ -4,22 +4,10 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class Abyss : MonoBehaviourPunCallbacks, IPunObservable
+public class Abyss : MonoBehaviourPunCallbacks
 {
     [SerializeField]private PolygonCollider2D polygonCollider2D;
     private Vector3 startSize;
-
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.IsWriting)
-        {
-            // We own this player: send the others our data
-        }
-        else
-        {
-            // Network player, receive data
-        }
-    }
 
     void Start()
     {

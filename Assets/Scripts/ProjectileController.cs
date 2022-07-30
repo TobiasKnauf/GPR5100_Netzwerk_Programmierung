@@ -5,9 +5,9 @@ using UnityEngine.VFX;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class ProjectileController : MonoBehaviourPunCallbacks, IPunObservable
+public class ProjectileController : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks
 {
-    public PlayerController Owner;
+    public PlayerController PlayerOwner;
     public bool IsFlying;
 
     [SerializeField] private Vector3 poolingPosition;
@@ -20,15 +20,14 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private AudioClip collisionSFX;
     private Vector3 preCollisionVelocity;
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (IsFlying)
         {
             preCollisionVelocity = rb.velocity;
-            if (Owner == null)
+            if (PlayerOwner == null)
                 Fly();
         }
-
     }
 
     private void Fly()
@@ -41,9 +40,9 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunObservable
 
     public void StartFlying()
     {
-        Debug.Log($"Owner is {Owner}");
-        transform.position = Owner.transform.position;
+        //Debug.Log($"Owner is {PlayerOwner}");
         IsFlying = true;
+        transform.position = PlayerOwner.transform.position;
         trailRenderer.Clear();
         trailRenderer.emitting = true;
         rb.bodyType = RigidbodyType2D.Dynamic;
@@ -57,12 +56,16 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunObservable
         rb.bodyType = RigidbodyType2D.Static;
     }
 
-    public void PickUp(int _player)
+    public void PickUp(int _viewID)
     {
-        Owner = GameManager.Instance.Players[_player];
+        PlayerOwner = GameManager.Instance.Players[_viewID];
         StopFlying();
         transform.position = poolingPosition;
-        Debug.Log($"Owner is {Owner}");
+        //Debug.Log($"Owner is {PlayerOwner}");
+    }
+    public void PickupOwnership()
+    {
+        this.photonView.RequestOwnership();
     }
 
     public void Shoot(Vector2 _direction, float _force)
@@ -77,18 +80,23 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunObservable
         collisionVisualEffect.SetVector3("Velocity", preCollisionVelocity);
         collisionVisualEffect.Play();
         AudioManager.Instance.PlaySFX(collisionSFX);
-        Owner = null;
+        PlayerOwner = null;
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    public void OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
     {
-        if (stream.IsWriting)
-        {
-            // We own this player: send the others our data
-        }
-        else
-        {
-            // Network player, receive data
-        }
+        Debug.Log($"{requestingPlayer} requests an ownership transfer");
+
+        targetView.TransferOwnership(requestingPlayer);
+    }
+
+    public void OnOwnershipTransfered(PhotonView targetView, Player previousOwner)
+    {
+        Debug.Log($"Ownership transfered from {previousOwner} to {this.photonView.Owner}");
+    }
+
+    public void OnOwnershipTransferFailed(PhotonView targetView, Player senderOfFailedRequest)
+    {
+        Debug.Log($"{senderOfFailedRequest} failed to send request");
     }
 }

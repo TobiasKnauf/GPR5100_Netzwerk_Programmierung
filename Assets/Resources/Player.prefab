@@ -443,7 +443,7 @@ MonoBehaviour:
   hasNoProjectileColor: {r: 0.13725491, g: 0.13333334, b: 0.12941177, a: 1}
   cooldownIndicator: {fileID: 1795776113}
   rbPlayer: {fileID: 3696879535819387943}
-  force: 18
+  force: 20
   cooldown: 0
   dashCooldown: 0.5
   shootCooldown: 0.5
@@ -451,6 +451,11 @@ MonoBehaviour:
   projectile: {fileID: 0}
   playerInput: {fileID: 4985475777358848454}
   deathVisualEffect: {fileID: 1606749838}
+  NickName: 
+  Color:
+    serializedVersion: 2
+    rgba: 0
+  Wins: 0
 --- !u!114 &6173075462598792065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,7 +475,6 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 1
   ObservedComponents:
-  - {fileID: 1297538680028062524}
   - {fileID: 7548580891496745297}
   - {fileID: 3607923094703656426}
   sceneViewId: 0
@@ -505,8 +509,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SynchronizeVelocity: 1
-  m_SynchronizeAngularVelocity: 0
-  m_TeleportEnabled: 0
+  m_SynchronizeAngularVelocity: 1
+  m_TeleportEnabled: 1
   m_TeleportIfDistanceGreaterThan: 3
 --- !u!50 &3696879535819387943
 Rigidbody2D:

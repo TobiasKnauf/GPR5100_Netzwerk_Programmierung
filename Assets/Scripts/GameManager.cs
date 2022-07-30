@@ -36,12 +36,19 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject projectilePrefab;
+    public MenuUIManager MenuUIManager;
+    public InGameUIManager InGameUIManager;
+
+    public int MaxRoundCount = 5;
+    public int CurrentRound;
+    
 
     public ProjectileController Projectile;
 
     private List<RoomInfo> roomList;
 
     public Dictionary<int, PlayerController> Players = new Dictionary<int, PlayerController>();
+    private int playerCount;
 
     public Color32[] PlayerColors = new Color32[]
     {
@@ -54,6 +61,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         Initialize();
+        MenuUIManager = FindObjectOfType<MenuUIManager>();
     }
 
     private void Start()
@@ -70,8 +78,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (_scene == SceneManager.GetSceneByBuildIndex(1))
         {
+            InGameUIManager = FindObjectOfType<InGameUIManager>();
             InstantiateLocalPlayer();
             InstantiateLocalProjectile();
+        }
+        if (_scene == SceneManager.GetSceneByBuildIndex(0))
+        {
+            MenuUIManager = FindObjectOfType<MenuUIManager>();
         }
     }
     private void OnDestroy()
@@ -95,7 +108,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
         {
             roomList = _list;
-            UIManager.Instance.CreateNewRoomButtons(roomList);
+            MenuUIManager.CreateNewRoomButtons(roomList);
         }
 
         base.OnRoomListUpdate(roomList);
@@ -109,13 +122,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
         {
-            UIManager.Instance.OnJoined();
-            UIManager.Instance.UpdatePlayerPanels();
+            MenuUIManager.OnJoined();
+            MenuUIManager.UpdatePlayerPanels();
 
             if (PhotonNetwork.IsMasterClient)
-                UIManager.Instance.ShowHostStartButton();
+                MenuUIManager.ShowHostStartButton();
             else
-                UIManager.Instance.ShowHostStartButton(false);
+                MenuUIManager.ShowHostStartButton(false);
         }
 
         base.OnJoinedRoom();
@@ -124,8 +137,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
         {
-            UIManager.Instance.ShowHostStartButton(false);
-            UIManager.Instance.OnLeft();
+            MenuUIManager.ShowHostStartButton(false);
+            MenuUIManager.OnLeft();
         }
         base.OnLeftRoom();
     }
@@ -133,7 +146,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
         {
-            UIManager.Instance.UpdatePlayerPanels();
+            MenuUIManager.UpdatePlayerPanels();
         }
 
         base.OnPlayerEnteredRoom(newPlayer);
@@ -142,12 +155,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
         {
-            UIManager.Instance.UpdatePlayerPanels();
+            MenuUIManager.UpdatePlayerPanels();
 
             if (PhotonNetwork.IsMasterClient)
-                UIManager.Instance.ShowHostStartButton();
+                MenuUIManager.ShowHostStartButton();
             else
-                UIManager.Instance.ShowHostStartButton(false);
+                MenuUIManager.ShowHostStartButton(false);
         }
 
         base.OnPlayerLeftRoom(otherPlayer);
@@ -201,6 +214,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void RegisterPlayer(int _viewID, PlayerController _controller)
     {
         Players.Add(_viewID, _controller);
+        playerCount++;
         Debug.Log($"Added {_viewID} to the List");
     }
     public void UnRegisterPlayer(int _viewID)
@@ -208,7 +222,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (Players.ContainsKey(_viewID))
         {
             Players.Remove(_viewID);
-            Debug.Log($"Removed {_viewID} from the List");
+            playerCount--;
         }
     }
 
@@ -219,10 +233,18 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (Players.Count > 0)
         {
             Debug.LogError(_viewID + " died!");
-            Players.Remove(_viewID);
+            playerCount--;
         }
 
         CalculateWin();
+    }
+
+    public void RepositionPlayers()
+    {
+        for (int i = 0; i < Players.Count; i++)
+        {
+            Players.ElementAt(i).Value.Reposition();
+        }
     }
 
     private void UpdateAllPlayers(int _viewID)
@@ -237,15 +259,37 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     private void CalculateWin()
     {
-        if (Players.Count == 1)
+        if (playerCount == 1)
         {
-            Debug.LogError($"{Players.ElementAt(0).Key} won!");
-
-            /*
-             * Show GameResult UI
-             * 'PLAYER X WON' etc
-             */
+            if (CurrentRound < MaxRoundCount)
+                InGameUIManager.EndOfRound();
+            else
+                InGameUIManager.EndOfMatch();
         }
+    }
+    public PlayerController GetWinner()
+    {
+        for (int i = 0; i < Players.Count; i++)
+        {
+            if (!Players.ElementAt(i).Value.IsDead)
+            {
+                Players.ElementAt(i).Value.Wins++;
+                return Players.ElementAt(i).Value;
+            }
+        }
+        return null;
+    }
+
+    public void StartRound()
+    {
+        playerCount = Players.Count;
+        for (int i = 0; i < Players.Count; i++)
+        {
+            Players.ElementAt(i).Value.OnRespawn();
+        }
+        Projectile.transform.position = Vector2.zero;
+        Projectile.StopFlying();
+        CurrentRound++;
     }
     #endregion
 }
