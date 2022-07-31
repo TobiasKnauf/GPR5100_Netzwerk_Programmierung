@@ -435,15 +435,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c8fcca6117f7234aadc8dbdcd863a21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 400
-  dashSpeed: 16
+  moveSpeed: 350
+  dashSpeed: 12
   body: {fileID: 1045930665234055982}
   projectileIndicator: {fileID: 6571519428525330500}
   hasProjectileColor: {r: 0.9450981, g: 0.74509805, b: 0.2627451, a: 1}
   hasNoProjectileColor: {r: 0.13725491, g: 0.13333334, b: 0.12941177, a: 1}
   cooldownIndicator: {fileID: 1795776113}
   rbPlayer: {fileID: 3696879535819387943}
-  force: 20
+  force: 12
   cooldown: 0
   dashCooldown: 0.5
   shootCooldown: 0.5
