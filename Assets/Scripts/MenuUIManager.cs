@@ -14,7 +14,6 @@ public class MenuUIManager : MonoBehaviour
     [SerializeField] private Canvas m_StartPanel;
     [SerializeField] private Canvas m_RoomListPanel;
     [SerializeField] private Canvas m_RoomPanel;
-    [SerializeField] private Canvas m_OptionsPanel;
 
     [Header("StartPanel Objects")]
     [SerializeField] private Image m_ControlsImage;
@@ -42,7 +41,6 @@ public class MenuUIManager : MonoBehaviour
         m_StartPanel.enabled = false;
         m_RoomListPanel.enabled = false;
         m_RoomPanel.enabled = false;
-        m_OptionsPanel.enabled = false;
     }
 
     public void ShowPanel(Canvas _panel)
