@@ -1106,7 +1106,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1586600225, guid: d4e62149d0f946b488746f0825841e83, type: 3}
       propertyPath: m_Volume
-      value: 0.5
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5020076339237498074, guid: d4e62149d0f946b488746f0825841e83, type: 3}
       propertyPath: sceneViewId
