@@ -34,16 +34,6 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunOwnershipCall
         }
     }
 
-    public void StartFlying()
-    {
-        //Debug.Log($"Owner is {PlayerOwner}");
-        IsFlying = true;
-        transform.position = PlayerOwner.transform.position;
-        trailRenderer.Clear();
-        trailRenderer.emitting = true;
-        rb.bodyType = RigidbodyType2D.Dynamic;
-    }
-
     public void StopFlying()
     {
         IsFlying = false;
@@ -67,17 +57,22 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunOwnershipCall
 
     public void Shoot(Vector2 _direction, float _force)
     {
-        StartFlying();
+        //Debug.Log($"Owner is {PlayerOwner}");
+        rb.bodyType = RigidbodyType2D.Dynamic;
         rb.AddForce(_direction.normalized * _force, ForceMode2D.Impulse);
+        transform.position = PlayerOwner.transform.position;
+        IsFlying = true;
+        trailRenderer.Clear();
+        trailRenderer.emitting = true;
     }
 
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        PlayerOwner = null;
         collisionVisualEffect.SetVector3("Velocity", preCollisionVelocity);
         collisionVisualEffect.Play();
         AudioManager.Instance.PlaySFX(collisionSFX);
-        PlayerOwner = null;
     }
 
     public void OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)

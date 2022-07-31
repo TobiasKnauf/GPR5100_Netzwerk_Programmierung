@@ -247,28 +247,27 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 if (isDashing)
                 {                    
                     cooldown = shootCooldown;
+                    projectile.PickupOwnership();
                     projectile.PickUp(photonView.ViewID);
                     photonView.RPC("SyncPickup", RpcTarget.All, photonView.ViewID);
                     PhotonNetwork.SendAllOutgoingCommands();
-                    projectile.PickupOwnership();
                     projectileIndicator.color = hasProjectileColor;
                     playerInput.SwitchCurrentActionMap("Gameplay Weapon");
 
                 }
                 else if (projectile.IsFlying)
                 {
-                    rbPlayer.AddForce(collision.attachedRigidbody.velocity, ForceMode2D.Impulse);
-                    projectile.PlayerOwner = null;
                     projectile.StopFlying();
+                    projectile.PlayerOwner = null;
                     Call_Dead();
                 }
                 else
                 {
                     cooldown = shootCooldown;
+                    projectile.PickupOwnership();
                     projectile.PickUp(photonView.ViewID);
                     photonView.RPC("SyncPickup", RpcTarget.All, photonView.ViewID);
                     PhotonNetwork.SendAllOutgoingCommands();
-                    projectile.PickupOwnership();
                     projectileIndicator.color = hasProjectileColor;
                     playerInput.SwitchCurrentActionMap("Gameplay Weapon");
                 }
