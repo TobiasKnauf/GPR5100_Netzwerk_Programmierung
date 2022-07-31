@@ -27,7 +27,7 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunOwnershipCall
         if (IsFlying)
         {
             preCollisionVelocity = rb.velocity;
-            if (Owner == null)
+            if (PlayerOwner == null)
                 if (rb.velocity.magnitude < flyingThreshold)
                 {
                     StopFlying();
