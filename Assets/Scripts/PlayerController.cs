@@ -127,6 +127,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         Shoot();
         photonView.RPC("SyncShoot", RpcTarget.All);
+        PhotonNetwork.SendAllOutgoingCommands();
     }
 
     private void OnMenu(InputValue inputValue)
@@ -227,6 +228,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private void Call_Dead()
     {
         photonView.RPC("PCB_Death", RpcTarget.All, this.photonView.ViewID);
+        PhotonNetwork.SendAllOutgoingCommands();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -239,6 +241,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
                     cooldown = shootCooldown;
                     projectile.PickUp(photonView.ViewID);
                     photonView.RPC("SyncPickup", RpcTarget.All, photonView.ViewID);
+                    PhotonNetwork.SendAllOutgoingCommands();
                     projectile.PickupOwnership();
                     projectileIndicator.color = hasProjectileColor;
                     playerInput.SwitchCurrentActionMap("Gameplay Weapon");
@@ -256,6 +259,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
                     cooldown = shootCooldown;
                     projectile.PickUp(photonView.ViewID);
                     photonView.RPC("SyncPickup", RpcTarget.All, photonView.ViewID);
+                    PhotonNetwork.SendAllOutgoingCommands();
                     projectile.PickupOwnership();
                     projectileIndicator.color = hasProjectileColor;
                     playerInput.SwitchCurrentActionMap("Gameplay Weapon");
