@@ -443,11 +443,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerOwner: {fileID: 0}
   IsFlying: 0
-  poolingPosition: {x: -100, y: -100, z: 0}
+  poolingPosition: {x: -30, y: -30, z: 0}
   rb: {fileID: 562171942872256496}
   circleCollider: {fileID: 562171942872256398}
   circleTrigger: {fileID: 562171942073167720}
-  flyingThreshold: 9
+  flyingThreshold: 5
   trailRenderer: {fileID: 562171942022166377}
   collisionVisualEffect: {fileID: 562171942549222404}
   collisionSFX: {fileID: 8300000, guid: d5f1a5802f11fea438524fc3cbcb9af6, type: 3}
@@ -505,7 +505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
-  m_SynchronizeScale: 1
+  m_SynchronizeScale: 0
   m_UseLocal: 1
 --- !u!50 &562171942872256496
 Rigidbody2D:

@@ -22,8 +22,6 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunOwnershipCall
 
     private void Update()
     {
-        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
-
         if (IsFlying)
         {
             preCollisionVelocity = rb.velocity;
@@ -55,10 +53,9 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunOwnershipCall
 
     public void PickUp(int _viewID)
     {
-        StopFlying();
         PlayerOwner = GameManager.Instance.Players[_viewID];
-        transform.position = poolingPosition;
-        //Debug.Log($"Owner is {PlayerOwner}");
+        transform.position = poolingPosition; 
+        StopFlying();
     }
     public void PickupOwnership()
     {
