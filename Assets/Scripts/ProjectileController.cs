@@ -22,19 +22,16 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunOwnershipCall
 
     private void Update()
     {
+        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
+
         if (IsFlying)
         {
             preCollisionVelocity = rb.velocity;
-            if (PlayerOwner == null)
-                Fly();
-        }
-    }
-
-    private void Fly()
-    {
-        if (rb.velocity.magnitude < flyingThreshold)
-        {
-            StopFlying();
+            if (Owner == null)
+                if (rb.velocity.magnitude < flyingThreshold)
+                {
+                    StopFlying();
+                }
         }
     }
 
@@ -58,8 +55,8 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunOwnershipCall
 
     public void PickUp(int _viewID)
     {
-        PlayerOwner = GameManager.Instance.Players[_viewID];
         StopFlying();
+        PlayerOwner = GameManager.Instance.Players[_viewID];
         transform.position = poolingPosition;
         //Debug.Log($"Owner is {PlayerOwner}");
     }
