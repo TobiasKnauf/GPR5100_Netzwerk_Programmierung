@@ -26,6 +26,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private Image[] m_GameStandingsColor;
     private PlayerController[] PlayerStandings;
 
+    [SerializeField] private TMP_Text m_StartTimer;
 
     private float timer;
     private bool roundOver;
@@ -45,20 +46,24 @@ public class InGameUIManager : MonoBehaviour
         {
             timer -= Time.deltaTime;
             m_SldTimer.value = timer;
-            if(timer <= 0)
+            if (timer <= 0)
             {
-                StartNextRound();
+                StartCoroutine(StartNextRound(false));
             }
         }
     }
     public void EndOfMatch()
     {
+        GameManager.Instance.GetWinner();
+
+        PlayerStandings = new PlayerController[GameManager.Instance.Players.Count];
         m_GameOverCanvas.enabled = true;
         for (int i = 0; i < GameManager.Instance.Players.Count; i++)
         {
             PlayerStandings[i] = GameManager.Instance.Players.ElementAt(i).Value;
         }
-        PlayerStandings.OrderBy(player => player.Wins);
+        PlayerController[] sorted = PlayerStandings.OrderByDescending(player => player.Wins).ToArray();
+        PlayerStandings = sorted;
         for (int i = 0; i < GameManager.Instance.Players.Count; i++)
         {
             m_StandingsPanels[i].SetActive(true);
@@ -66,12 +71,29 @@ public class InGameUIManager : MonoBehaviour
             m_GameStandingsColor[i].color = PlayerStandings[i].Color;
         }
     }
-    private void StartNextRound()
+    public IEnumerator StartNextRound(bool _firstRound)
     {
         roundOver = false;
-        GameManager.Instance.StartRound();
-        Debug.Log("Started next Round: " + GameManager.Instance.CurrentRound);
+
+        if (!_firstRound)
+            GameManager.Instance.StartRound();
+
         m_ResultCanvas.enabled = false;
+
+        m_StartTimer.text = "" + 6;
+        yield return new WaitForSeconds(1);
+        m_StartTimer.text = "" + 5;
+        yield return new WaitForSeconds(1);
+        m_StartTimer.text = "" + 4;
+        yield return new WaitForSeconds(1);
+        m_StartTimer.text = "" + 3;
+        yield return new WaitForSeconds(1);
+        m_StartTimer.text = "" + 2;
+        yield return new WaitForSeconds(1);
+        m_StartTimer.text = "" + 1;
+        yield return new WaitForSeconds(1);
+
+        m_StartTimer.text = "";
     }
 
     public void ShowPanel()
@@ -97,5 +119,6 @@ public class InGameUIManager : MonoBehaviour
     {
         PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene(0);
+        Destroy(GameManager.Instance.gameObject);
     }
 }

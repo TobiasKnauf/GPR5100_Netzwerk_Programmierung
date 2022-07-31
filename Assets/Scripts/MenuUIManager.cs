@@ -140,6 +140,8 @@ public class MenuUIManager : MonoBehaviour
             MaxPlayers = (byte)(m_RoomPlayerCount.value + 2),
             IsVisible = true, //needs to be true so the roomlist will be updated
             IsOpen = true,
+            CleanupCacheOnLeave = true,
+            PublishUserId = true,
         };
 
         string roomName = m_RoomNameInput.text;

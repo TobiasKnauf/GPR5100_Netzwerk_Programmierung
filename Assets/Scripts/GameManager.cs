@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public int MaxRoundCount = 5;
     public int CurrentRound;
-    
+
 
     public ProjectileController Projectile;
 
@@ -81,6 +81,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             InGameUIManager = FindObjectOfType<InGameUIManager>();
             InstantiateLocalPlayer();
             InstantiateLocalProjectile();
+            StartCoroutine(InGameUIManager.StartNextRound(true));
         }
         if (_scene == SceneManager.GetSceneByBuildIndex(0))
         {
@@ -89,6 +90,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     private void OnDestroy()
     {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
         Terminate();
     }
 
@@ -153,7 +155,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
         {
             MenuUIManager.UpdatePlayerPanels();
 
@@ -161,6 +163,10 @@ public class GameManager : MonoBehaviourPunCallbacks
                 MenuUIManager.ShowHostStartButton();
             else
                 MenuUIManager.ShowHostStartButton(false);
+        }
+        else
+        {
+            RestartRound();
         }
 
         base.OnPlayerLeftRoom(otherPlayer);
@@ -215,6 +221,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Players.Add(_viewID, _controller);
         playerCount++;
+
         Debug.Log($"Added {_viewID} to the List");
     }
     public void UnRegisterPlayer(int _viewID)
@@ -222,6 +229,13 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (Players.ContainsKey(_viewID))
         {
             Players.Remove(_viewID);
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                Projectile.photonView.TransferOwnership(Players.ElementAt(Players.Count-1).Key);
+
+                PhotonNetwork.DestroyPlayerObjects(_viewID);
+            }
             playerCount--;
         }
     }
@@ -232,7 +246,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (Players.Count > 0)
         {
-            Debug.LogError(_viewID + " died!");
             playerCount--;
         }
 
@@ -261,7 +274,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (playerCount == 1)
         {
-            if (CurrentRound < MaxRoundCount)
+            if (CurrentRound < MaxRoundCount-1)
                 InGameUIManager.EndOfRound();
             else
                 InGameUIManager.EndOfMatch();
@@ -290,6 +303,16 @@ public class GameManager : MonoBehaviourPunCallbacks
         Projectile.transform.position = Vector2.zero;
         Projectile.StopFlying();
         CurrentRound++;
+    }
+    public void RestartRound()
+    {
+        playerCount = Players.Count;
+        for (int i = 0; i < Players.Count; i++)
+        {
+            Players.ElementAt(i).Value.OnRespawn();
+        }
+        InstantiateLocalProjectile();
+        StartCoroutine(InGameUIManager.StartNextRound(true));
     }
     #endregion
 }

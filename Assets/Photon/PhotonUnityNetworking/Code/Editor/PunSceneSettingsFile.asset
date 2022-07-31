@@ -12,8 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc3284eace5a64d4bb516df7d7effdb9, type: 3}
   m_Name: PunSceneSettingsFile
   m_EditorClassIdentifier: 
-  SceneSettingsListFoldoutOpen: 1
-  MinViewIdPerScene:
-  - sceneAsset: {fileID: 102900000, guid: bd69682fba1c12f4dbd6f0fd29269b50, type: 3}
-    sceneName: Test_Menu
-    minViewId: 2
+  SceneSettingsListFoldoutOpen: 0
+  MinViewIdPerScene: []

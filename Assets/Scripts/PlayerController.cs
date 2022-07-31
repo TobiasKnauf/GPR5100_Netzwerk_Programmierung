@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     [SerializeField] private ProjectileController projectile;
 
-    [SerializeField] PlayerInput playerInput;
+    [SerializeField] public PlayerInput playerInput;
 
     [SerializeField] private VisualEffect deathVisualEffect;
 
@@ -276,7 +276,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private void Initialize()
     {
         GameManager.Instance.RegisterPlayer(this.photonView.ViewID, this);
-        SetPlayerIdentity();
+        SetPlayerIdentities();
 
         // #Important
         // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
@@ -289,7 +289,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         DontDestroyOnLoad(this.gameObject);
     }
 
-    private void SetPlayerIdentity()
+    private void SetPlayerIdentities()
     {
         switch (photonView.ViewID)
         {

@@ -15,6 +15,11 @@ public class Abyss : MonoBehaviourPunCallbacks
     }
     void FixedUpdate()
     {
+        if (GameManager.Instance.Projectile == null)
+        {
+            transform.localScale = startSize;
+        }
+
         if (polygonCollider2D.bounds.Contains(GameManager.Instance.Projectile.transform.position) && !GameManager.Instance.Projectile.IsFlying)
         {
             if (transform.localScale.x > 0.1f)
