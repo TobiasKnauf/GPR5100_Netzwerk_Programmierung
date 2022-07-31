@@ -18,6 +18,7 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunOwnershipCall
     [SerializeField] private TrailRenderer trailRenderer;
     [SerializeField] private VisualEffect collisionVisualEffect;
     [SerializeField] private AudioClip collisionSFX;
+    [SerializeField] private AudioClip m_PickupSFX;
     private Vector3 preCollisionVelocity;
 
     private void Update()
@@ -56,6 +57,8 @@ public class ProjectileController : MonoBehaviourPunCallbacks, IPunOwnershipCall
         PlayerOwner = GameManager.Instance.Players[_viewID];
         transform.position = poolingPosition; 
         StopFlying();
+        AudioManager.Instance.PlaySFX(m_PickupSFX);
+        //Debug.Log($"Owner is {PlayerOwner}");
     }
     public void PickupOwnership()
     {

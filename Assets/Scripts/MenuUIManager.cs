@@ -174,5 +174,9 @@ public class MenuUIManager : MonoBehaviour
 
         OnStart();
     }
+    public void OnClick_QuitGame()
+    {
+        Application.Quit();
+    }
     #endregion
 }

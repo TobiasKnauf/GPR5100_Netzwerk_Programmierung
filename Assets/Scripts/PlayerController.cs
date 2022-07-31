@@ -27,6 +27,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     [SerializeField] private Rigidbody2D rbPlayer;
 
+
+    [SerializeField] private AudioClip m_DashSFX;
+    [SerializeField] private AudioClip m_ScreenShakeSFX;
+    [SerializeField] private AudioClip m_DeathSFX;
+
     private Vector2 moveVal;
 
     [SerializeField] private float force;
@@ -143,7 +148,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private void Move()
     {
         if (isDashing)
-            return;
+           return;
+                    
         if (moveVal.magnitude > 0.5f)
         {
             rbPlayer.drag = 1f;
@@ -168,6 +174,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             yield break;
 
         isDashing = true;
+        AudioManager.Instance.PlaySFX(m_DashSFX);
         rbPlayer.drag = 1f;
         rbPlayer.AddForce(transform.up * dashSpeed, ForceMode2D.Impulse);
         cooldown = dashCooldown;
@@ -201,6 +208,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private void PCB_Death(int _viewID)
     {
         GameManager.Instance.PlayerDied(_viewID);
+        AudioManager.Instance.PlaySFX(m_DeathSFX);
     }
     public void OnDie()
     {
@@ -237,7 +245,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             if (projectile.PlayerOwner != this)
             {
                 if (isDashing)
-                {
+                {                    
                     cooldown = shootCooldown;
                     projectile.PickUp(photonView.ViewID);
                     photonView.RPC("SyncPickup", RpcTarget.All, photonView.ViewID);
@@ -274,6 +282,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (relVelSqrMag > 5f)
         {
             screenShake.StartShake(6, relVelSqrMag * 0.001f, 80);
+            AudioManager.Instance.PlaySFX(m_ScreenShakeSFX);
         }
     }
 
