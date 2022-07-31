@@ -443,6 +443,9 @@ MonoBehaviour:
   hasNoProjectileColor: {r: 0.13725491, g: 0.13333334, b: 0.12941177, a: 1}
   cooldownIndicator: {fileID: 1795776113}
   rbPlayer: {fileID: 3696879535819387943}
+  m_DashSFX: {fileID: 8300000, guid: 33b439381bbc91143aaadeb5ff589e94, type: 3}
+  m_ScreenShakeSFX: {fileID: 8300000, guid: 53babe0ff9dbfe34b80115655e87696b, type: 3}
+  m_DeathSFX: {fileID: 8300000, guid: cad7957340b5b304a85c294145847cff, type: 3}
   force: 20
   cooldown: 0
   dashCooldown: 0.5

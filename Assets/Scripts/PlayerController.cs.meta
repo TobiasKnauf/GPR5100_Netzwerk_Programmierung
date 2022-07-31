@@ -3,7 +3,16 @@ guid: 0c8fcca6117f7234aadc8dbdcd863a21
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - body: {instanceID: 0}
+  - projectileIndicator: {instanceID: 0}
+  - cooldownIndicator: {instanceID: 0}
+  - rbPlayer: {instanceID: 0}
+  - m_DashSFX: {fileID: 8300000, guid: 33b439381bbc91143aaadeb5ff589e94, type: 3}
+  - m_ScreenShakeSFX: {fileID: 8300000, guid: 53babe0ff9dbfe34b80115655e87696b, type: 3}
+  - projectile: {instanceID: 0}
+  - playerInput: {instanceID: 0}
+  - deathVisualEffect: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

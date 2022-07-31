@@ -451,6 +451,7 @@ MonoBehaviour:
   trailRenderer: {fileID: 562171942022166377}
   collisionVisualEffect: {fileID: 562171942549222404}
   collisionSFX: {fileID: 8300000, guid: d5f1a5802f11fea438524fc3cbcb9af6, type: 3}
+  m_PickupSFX: {fileID: 8300000, guid: 17dcadae794f00d49a2958bffa983d95, type: 3}
 --- !u!114 &562171942872256498
 MonoBehaviour:
   m_ObjectHideFlags: 0
