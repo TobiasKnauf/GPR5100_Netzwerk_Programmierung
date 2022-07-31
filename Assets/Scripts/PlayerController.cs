@@ -12,9 +12,9 @@ using Photon.Realtime;
 using System.Linq;
 using System;
 
-public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
+public class PlayerController : MonoBehaviourPunCallbacks
 {
-    public static GameObject LocalPlayerInstance;
+    public static PlayerController LocalPlayerInstance;
 
     [SerializeField] private float moveSpeed;
     [SerializeField] private float dashSpeed;
@@ -40,12 +40,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     [SerializeField] private ProjectileController projectile;
 
-    [SerializeField] PlayerInput playerInput;
+    [SerializeField] public PlayerInput playerInput;
 
     [SerializeField] private VisualEffect deathVisualEffect;
 
     private Camera cam;
     private ScreenShake screenShake;
+
+    public string NickName;
+    public Color32 Color;
+    public int Wins;
 
     private void Awake()
     {
@@ -61,8 +65,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
-
+        if (!photonView.IsMine && PhotonNetwork.IsConnected)
+        {
+            return;
+        }
         if (!IsDead)
             Cooldown();
     }
@@ -84,7 +90,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void FixedUpdate()
     {
-        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
+        if (!photonView.IsMine && PhotonNetwork.IsConnected)
+        {
+            return;
+        }
 
         if (!projectile)
             projectile = GameObject.FindObjectOfType<ProjectileController>();
@@ -97,21 +106,24 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnMove(InputValue inputValue)
     {
-        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
+        if (!photonView.IsMine)
+            return;
 
         moveVal = inputValue.Get<Vector2>();
     }
 
     private void OnDash(InputValue inputValue)
     {
-        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
+        if (!photonView.IsMine)
+            return;
 
         StartCoroutine(Dash());
     }
 
     private void OnShoot(InputValue inputValue)
     {
-        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
+        if (!photonView.IsMine)
+            return;
 
         Shoot();
         photonView.RPC("SyncShoot", RpcTarget.All);
@@ -120,7 +132,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnMenu(InputValue inputValue)
     {
-        if (!photonView.IsMine && PhotonNetwork.IsConnected) return;
+        if (!photonView.IsMine)
+            return;
+
+        GameManager.Instance.InGameUIManager.ShowPanel();
     }
 
     #endregion
@@ -175,7 +190,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void SyncShoot()
     {
-        projectile.StartFlying();
+        Shoot();
     }
     [PunRPC]
     private void SyncPickup(int _viewID)
@@ -195,6 +210,20 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         projectileIndicator.enabled = false;
         rbPlayer.simulated = false;
         screenShake.StartShake(11, 0.7f, 80);
+    }
+    public void OnRespawn()
+    {
+        IsDead = false;
+        body.enabled = true;
+        projectileIndicator.enabled = true;
+        rbPlayer.simulated = true;
+    }
+    public void Reposition()
+    {
+        if (!photonView.IsMine) return;
+
+        Vector2 rndPos = UnityEngine.Random.insideUnitCircle.normalized * 6;
+        transform.position = rndPos;
     }
     private void Call_Dead()
     {
@@ -225,7 +254,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
     }
-
     private void PickUpProjectile()
     {
         cooldown = shootCooldown;
@@ -248,79 +276,78 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private void Initialize()
     {
         GameManager.Instance.RegisterPlayer(this.photonView.ViewID, this);
-        ChangePlayerColor();
+        SetPlayerIdentities();
 
         // #Important
         // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
         if (photonView.IsMine)
         {
-            PlayerController.LocalPlayerInstance = this.gameObject;
+            PlayerController.LocalPlayerInstance = this;
         }
         // #Critical
         // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
         DontDestroyOnLoad(this.gameObject);
     }
 
-    private void ChangePlayerColor()
+    private void SetPlayerIdentities()
     {
         switch (photonView.ViewID)
         {
             case 1001:
-                body.color = GameManager.Instance.PlayerColors[0];
+                Color = GameManager.Instance.PlayerColors[0];
+                NickName = PhotonNetwork.PlayerList[0].NickName;
+                body.color = Color;
                 break;
             case 2001:
-                body.color = GameManager.Instance.PlayerColors[1];
+                Color = GameManager.Instance.PlayerColors[1];
+                NickName = PhotonNetwork.PlayerList[1].NickName;
+                body.color = Color;
                 break;
             case 3001:
-                body.color = GameManager.Instance.PlayerColors[2];
+                Color = GameManager.Instance.PlayerColors[2];
+                NickName = PhotonNetwork.PlayerList[2].NickName;
+                body.color = Color;
                 break;
             case 4001:
-                body.color = GameManager.Instance.PlayerColors[3];
+                Color = GameManager.Instance.PlayerColors[3];
+                NickName = PhotonNetwork.PlayerList[3].NickName;
+                body.color = Color;
                 break;
             default:
                 break;
         }
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.IsWriting)
-        {
-            // We own this player: send the others our data
-            //stream.SendNext(IsFiring);
-            //stream.SendNext(Health);
-        }
-        else
-        {
-            // Network player, receive data
-            //this.IsFiring = (bool)stream.ReceiveNext();
-            //this.Health = (float)stream.ReceiveNext();
-        }
-    }
     #region Player Leaves Edgecases
     private void OnDestroy()
     {
-        GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
+        if (GameManager.Instance != null)
+            GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
     }
     public override void OnDisconnected(DisconnectCause cause)
     {
-        GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
+        if (GameManager.Instance != null)
+            GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
         base.OnDisconnected(cause);
     }
     public override void OnLeftRoom()
     {
-        GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
+        if (GameManager.Instance != null)
+            GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
         base.OnLeftRoom();
     }
     public override void OnLeftLobby()
     {
-        GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
+        if (GameManager.Instance != null)
+            GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
         base.OnLeftLobby();
     }
     public override void OnDisable()
     {
-        GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
+        if (GameManager.Instance != null)
+            GameManager.Instance.UnRegisterPlayer(photonView.ViewID);
         base.OnDisable();
     }
+
     #endregion
 }
